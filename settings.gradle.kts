@@ -31,3 +31,5 @@ dependencyResolutionManagement {
 include(":composeApp")
 include(":database")
 include(":theme")
+include(":feature:bottom_navigation")
+include(":feature:home")
