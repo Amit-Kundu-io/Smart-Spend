@@ -54,7 +54,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.amit_kundu_io.feature.home"
+    namespace = "com.amit_kundu_io.utilities"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     packaging {
         resources {
