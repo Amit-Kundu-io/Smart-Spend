@@ -44,6 +44,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,8 +61,6 @@ import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.chip.CategoryChip.CategoryChip
 import com.amit_kundu_io.theme.ui.GradientEnd
-import com.amit_kundu_io.theme.ui.GradientPurple
-import com.amit_kundu_io.theme.ui.GradientPurpleEnd
 import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import com.amit_kundu_io.theme.ui.Success
@@ -78,6 +77,12 @@ fun AddTransactionRootScreen(
     onBack: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.isAddSuccessfully) {
+        if (state.isAddSuccessfully) {
+            onBack.invoke()
+        }
+    }
 
     AddTransactionScreen(
         state = state,
@@ -221,24 +226,26 @@ private fun AddTransactionScreen(
                         prefix = { Text("₹") })
                 }
             }
-            item {
-                Column {
-                    Text(
-                        "Category",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Category.all.forEach { category ->
-                            CategoryChip(
-                                emoji = category.icon,
-                                label = category.name,
-                                selected = selectedCategory == category.id,
-                                onClick = { selectedCategory = category.id })
+            if (selectedType.value == TransactionType.EXPENSE.value) {
+                item {
+                    Column {
+                        Text(
+                            "Category",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Category.all.forEach { category ->
+                                CategoryChip(
+                                    emoji = category.icon,
+                                    label = category.name,
+                                    selected = selectedCategory == category.id,
+                                    onClick = { selectedCategory = category.id })
+                            }
                         }
                     }
                 }

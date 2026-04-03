@@ -41,6 +41,10 @@ class TransactionRepositoryImpl(
         dao.delete(transaction)
     }
 
+    override fun observeById(id: String): Flow<TransactionEntity?> {
+        return dao.observeById(id)
+    }
+
     // -------------------------------
     // FETCH
     // -------------------------------

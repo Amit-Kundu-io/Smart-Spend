@@ -1,8 +1,8 @@
 /**
- * TransactionsAction.kt
+ * TransactionDetailAction.kt
  *
  * Author      : Amit Kundu
- * Created On  : 03/04/2026
+ * Created On  : 04/04/2026
  *
  * Description :
  * Part of the project codebase. This file contributes to the overall
@@ -13,10 +13,9 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.transactions.presentation
+package com.amit_kundu_io.home.presentation.transaction_detail
 
-sealed interface TransactionsAction {
-    object OnNextPage : TransactionsAction
-    data class OnRefresh(val type: Int? = null) : TransactionsAction
+sealed interface TransactionDetailAction {
+    data class ObserveTransaction(val id : String) : TransactionDetailAction
 
 }

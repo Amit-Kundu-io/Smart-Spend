@@ -47,12 +47,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amit_kundu_io.theme.Transaction
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
-import com.amit_kundu_io.theme.ui.CategoryFood
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
-import com.amit_kundu_io.utilities.Data_Models.PaymentMethod
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import com.amit_kundu_io.utilities.Logger.Logger
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -113,7 +111,10 @@ private fun TransactionsScreen(
                     items(filters) { filter ->
                         FilterChip(
                             selected = selectedFilter == filter,
-                            onClick = { selectedFilter = filter },
+                            onClick = {
+                                selectedFilter = filter
+                                onAction(TransactionsAction.OnRefresh(filter))
+                            },
                             label = { Text(TransactionType.fromValue(filter)?.name ?: "ALL") },
                             shape = RoundedCornerShape(8.dp)
                         )
@@ -132,11 +133,15 @@ private fun TransactionsScreen(
                 when (item) {
 
                     is TransactionUiItem.Header -> {
-                        Text(
-                            text = item.title.uppercase(),
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.padding(12.dp)
-                        )
+                        Column {
+                            Text(
+                                text = item.title.uppercase(),
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontSize = 16.sp
+                                ),
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
                     }
 
                     is TransactionUiItem.Item -> {

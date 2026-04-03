@@ -50,6 +50,7 @@ kotlin {
             implementation(libs.jetbrains.compose.navigation)
 
             implementation(libs.bundles.koin.common)
+            implementation(compose.materialIconsExtended)
 
 
         }

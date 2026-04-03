@@ -65,6 +65,11 @@ class TransactionsViewModel(
             TransactionsAction.OnNextPage -> {
                 loadNextItems()
             }
+
+            is TransactionsAction.OnRefresh -> {
+                val type = if (action.type == 99) null else action.type
+                refresh(type)
+            }
         }
     }
 
@@ -184,15 +189,17 @@ class TransactionsViewModel(
     }
 
     fun refresh(type: Int? = null) {
+        paginator.reset()
         currentPage = 0
         _state.update {
             it.copy(
-                isLoading = true,
                 transactions = emptyList(),
+                uiItems = emptyList(),
+                endReached = false,
                 currentFilter = type,
             )
         }
-        loadNextItems(fullLoading = true)
+        loadNextItems()
     }
 
 

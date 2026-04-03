@@ -1,8 +1,8 @@
 /**
- * AddTransactionState.kt
+ * TransactionDetailState.kt
  *
  * Author      : Amit Kundu
- * Created On  : 03/04/2026
+ * Created On  : 04/04/2026
  *
  * Description :
  * Part of the project codebase. This file contributes to the overall
@@ -13,12 +13,14 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.home.presentation.add_transaction_screen
+package com.amit_kundu_io.home.presentation.transaction_detail
 
 import androidx.compose.runtime.Immutable
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
+import com.amit_kundu_io.theme.Transaction
 
 @Immutable
-data class AddTransactionState(
+data class TransactionDetailState(
     val isLoading: Boolean = false,
-    val isAddSuccessfully: Boolean = false
+    val data: Transaction? = null
 )

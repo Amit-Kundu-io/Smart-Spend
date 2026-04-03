@@ -67,7 +67,13 @@ class AddTransactionViewModel(
 
     fun saveTransaction(transection: TransactionEntity) {
         viewModelScope.launch {
-            repo.insert(transection)
+            try {
+                 repo.insert(transection)
+                _state.value = AddTransactionState(isAddSuccessfully = true)
+            }
+            catch (e : Exception){
+
+            }
         }
     }
 

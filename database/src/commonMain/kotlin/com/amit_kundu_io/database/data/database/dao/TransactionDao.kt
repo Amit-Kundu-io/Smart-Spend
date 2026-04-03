@@ -92,4 +92,7 @@ interface TransactionDao {
 
         @Query("SELECT COUNT(*) FROM transactions")
         suspend fun getCount(): Int
+
+        @Query("SELECT * FROM transactions WHERE id = :id LIMIT 1")
+        fun observeById(id: String): Flow<TransactionEntity?>
 }

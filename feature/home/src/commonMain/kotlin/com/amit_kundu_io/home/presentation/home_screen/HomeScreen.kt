@@ -25,20 +25,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -60,7 +55,6 @@ import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
 import com.amit_kundu_io.theme.components.cards.BalanceCard
 import com.amit_kundu_io.theme.components.cards.BudgetProgressCard
-import com.amit_kundu_io.theme.components.cards.StatCardsGrid
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -112,10 +106,17 @@ fun HomeRootScreen(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add"
+                contentDescription = "Add",
+                tint = Color.White
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Add Expense")
+            Text(
+                "Add Expense",
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = Color.White,
+                    fontSize = 15.sp
+                )
+            )
         }
     }
 
