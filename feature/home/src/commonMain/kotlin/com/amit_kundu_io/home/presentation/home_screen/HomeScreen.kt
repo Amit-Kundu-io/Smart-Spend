@@ -48,7 +48,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
 import com.amit_kundu_io.theme.components.cards.BalanceCard
@@ -56,10 +55,11 @@ import com.amit_kundu_io.theme.components.cards.BudgetProgressCard
 import com.amit_kundu_io.theme.components.cards.StatCardsGrid
 import com.amit_kundu_io.theme.sampleTransactions
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeRootScreen(
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
