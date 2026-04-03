@@ -39,6 +39,7 @@ kotlin {
             implementation(projects.theme)
             implementation(projects.database)
             implementation(projects.feature.home)
+            implementation(projects.feature.transactions)
 
 
             implementation(libs.compose.runtime)

@@ -13,7 +13,7 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.home.utility
+package com.amit_kundu_io.transactions.presentation
 
 import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.theme.Transaction

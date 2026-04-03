@@ -37,6 +37,7 @@ kotlin {
             implementation(projects.database)
             implementation(projects.feature.bottomNavigation)
             implementation(projects.feature.home)
+            implementation(projects.feature.transactions)
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)

@@ -106,10 +106,7 @@ private fun AddTransactionScreen(
         )
 
         TransactionType.INCOME -> listOf(Success, Color(0xFF4CAF50))
-        TransactionType.TRANSFER -> listOf(
-            GradientPurple,
-            GradientPurpleEnd
-        )
+
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -136,7 +133,6 @@ private fun AddTransactionScreen(
                 listOf(
                     TransactionType.EXPENSE,
                     TransactionType.INCOME,
-                    TransactionType.TRANSFER
                 ).forEach { type ->
                     val isSelected = selectedType == type
                     OutlinedButton(
@@ -291,7 +287,7 @@ private fun AddTransactionScreen(
                             id = PlatformGlobulUtility.generateUUID(),
                             title = title,
                             amount = amount.toDoubleOrNull() ?: 0.0,
-                            type = selectedType.value,
+                            transactionType = selectedType.value,
                             category = selectedCategory,
                             paymentMethod = selectedPayment,
                             note = note,

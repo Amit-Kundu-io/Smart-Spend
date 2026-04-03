@@ -1,5 +1,5 @@
 /**
- * TransactionType.kt
+ * TransactionsModules.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,15 +13,13 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.utilities.Data_Models
+package com.amit_kundu_io.transactions.di
 
-enum class TransactionType(val value: Int) {
-    EXPENSE(100),
-    INCOME(101);
+import com.amit_kundu_io.transactions.presentation.TransactionsViewModel
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
 
-    companion object {
-        fun fromValue(value: Int): TransactionType? {
-            return values().find { it.value == value }
-        }
-    }
+fun transactionsModules() = module {
+    viewModelOf(::TransactionsViewModel)
 }
+

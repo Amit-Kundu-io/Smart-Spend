@@ -14,7 +14,7 @@ interface TransactionDao {
 
 
 
-        @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun insert(entity: TransactionEntity)
 
         @Update
@@ -36,36 +36,60 @@ interface TransactionDao {
     """)
         fun getRecent(limit: Int = 10): Flow<List<TransactionEntity>>
 
-        @Query("""
+        @Query(
+                """
         SELECT * FROM transactions 
-        WHERE type = :type 
+        WHERE transactionType = :type 
         ORDER BY date DESC
-    """)
+    """
+        )
         fun getByType(type: Int): Flow<List<TransactionEntity>>
 
 
-        @Query("""
+        @Query(
+                """
         SELECT IFNULL(SUM(amount), 0) 
         FROM transactions 
-        WHERE type = :type
-    """)
+        WHERE transactionType = :type
+    """
+        )
         fun getTotalByType(type: Int): Flow<Double>
 
-        @Query("""
+        @Query(
+                """
         SELECT IFNULL(SUM(amount), 0) 
         FROM transactions 
-        WHERE type = :type 
+        WHERE transactionType = :type 
         AND date BETWEEN :start AND :end
-    """)
+    """
+        )
         fun getTotalByTypeInRange(
-            type: Int,
-            start: Long,
-            end: Long
+                type: Int,
+                start: Long,
+                end: Long
         ): Flow<Double>
 
 
         @Query("DELETE FROM transactions")
         suspend fun clearAll()
 
+        @Query(
+                """
+    SELECT * FROM transactions
+    WHERE (:type IS NULL OR transactionType = :type)
+    ORDER BY date DESC
+    LIMIT :limit OFFSET :offset
+"""
+        )
+        suspend fun getTransactionsPagedByType(
+                type: Int?,
+                limit: Int,
+                offset: Int
+        ): List<TransactionEntity>
 
-    }
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        suspend fun insertAll(list: List<TransactionEntity>)
+
+        @Query("SELECT COUNT(*) FROM transactions")
+        suspend fun getCount(): Int
+}

@@ -31,7 +31,7 @@ import com.amit_kundu_io.database.data.database.entity.TransactionEntity
         TransactionEntity::class,
         BudgetEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @ConstructedBy(AppDatabaseConstructor::class)

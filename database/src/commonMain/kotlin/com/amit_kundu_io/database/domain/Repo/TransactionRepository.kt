@@ -38,4 +38,10 @@ interface TransactionRepository {
         end: Long
     ): Flow<Double>
 
+    suspend fun getPage(
+        page: Int,
+        pageSize : Int,
+        type: Int? = null
+    ): List<TransactionEntity>
+
 }

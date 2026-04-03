@@ -1,5 +1,5 @@
 /**
- * TransactionType.kt
+ * TransactionsAction.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,15 +13,9 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.utilities.Data_Models
+package com.amit_kundu_io.transactions.presentation
 
-enum class TransactionType(val value: Int) {
-    EXPENSE(100),
-    INCOME(101);
+sealed interface TransactionsAction {
+    object OnNextPage : TransactionsAction
 
-    companion object {
-        fun fromValue(value: Int): TransactionType? {
-            return values().find { it.value == value }
-        }
-    }
 }

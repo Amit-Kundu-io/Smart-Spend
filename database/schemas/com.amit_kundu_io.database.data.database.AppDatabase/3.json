@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "7835041269907f29ac8576aa07a8284d",
+    "version": 3,
+    "identityHash": "6642ba122c5e23bd0e1895497cbc5880",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `amount` REAL NOT NULL, `type` INTEGER NOT NULL, `category` INTEGER, `paymentMethod` INTEGER NOT NULL, `note` TEXT, `date` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `amount` REAL NOT NULL, `transactionType` INTEGER NOT NULL, `category` INTEGER, `paymentMethod` INTEGER NOT NULL, `note` TEXT, `date` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -27,8 +27,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "type",
-            "columnName": "type",
+            "fieldPath": "transactionType",
+            "columnName": "transactionType",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -72,13 +72,13 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_date` ON `${TABLE_NAME}` (`date`)"
           },
           {
-            "name": "index_transactions_type",
+            "name": "index_transactions_transactionType",
             "unique": false,
             "columnNames": [
-              "type"
+              "transactionType"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_type` ON `${TABLE_NAME}` (`type`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_transactionType` ON `${TABLE_NAME}` (`transactionType`)"
           },
           {
             "name": "index_transactions_category",
@@ -142,7 +142,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7835041269907f29ac8576aa07a8284d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6642ba122c5e23bd0e1895497cbc5880')"
     ]
   }
 }

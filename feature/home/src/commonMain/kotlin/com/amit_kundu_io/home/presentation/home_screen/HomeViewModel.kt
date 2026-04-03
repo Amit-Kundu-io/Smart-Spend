@@ -20,7 +20,6 @@ import androidx.lifecycle.viewModelScope
 import com.amit_kundu_io.database.domain.Repo.BudgetRepository
 import com.amit_kundu_io.database.domain.Repo.TransactionRepository
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
-import com.amit_kundu_io.utilities.Logger.Logger
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility.getCurrentYear
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility.getMonthEndEpoch

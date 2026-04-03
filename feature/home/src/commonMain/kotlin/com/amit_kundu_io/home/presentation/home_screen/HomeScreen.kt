@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amit_kundu_io.home.presentation.home_screen.components.BudgetBottomSheet
 import com.amit_kundu_io.home.utility.toUi
@@ -133,44 +134,17 @@ private fun HomeScreen(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
+            )
+            {
                 Column {
                     Text(
                         "Good morning,",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.White.copy(alpha = 0.75f)
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            color = Color.White.copy(alpha = 0.75f),
+                            fontSize = 16.sp
+                        ),
+
                     )
-                    Text(
-                        "Arjun Kumar 👋",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    IconButton(onClick = {}) {
-                        Surface(color = Color.White.copy(alpha = 0.2f), shape = CircleShape) {
-                            Box(
-                                modifier = Modifier.size(36.dp), contentAlignment = Alignment.Center
-                            ) {
-                                Icon(Icons.Outlined.Notifications, null, tint = Color.White)
-                            }
-                        }
-                    }
-                    Surface(
-                        color = Color.White.copy(alpha = 0.9f),
-                        shape = CircleShape,
-                        modifier = Modifier.size(40.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(
-                                "AK",
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
                 }
             }
             Spacer(Modifier.height(20.dp))
@@ -185,7 +159,7 @@ private fun HomeScreen(
         // Scrollable content
         LazyColumn(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
+            contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 150.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             item {
@@ -196,7 +170,7 @@ private fun HomeScreen(
                     date = state.monthLabel,
                 )
             }
-            item { StatCardsGrid() }
+           // item { StatCardsGrid() }
             item {
                 Row(
                     Modifier.fillMaxWidth(),

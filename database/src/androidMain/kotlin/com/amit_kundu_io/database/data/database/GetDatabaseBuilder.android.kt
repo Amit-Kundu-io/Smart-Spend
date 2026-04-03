@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.amit_kundu_io.database.data.database.di.MIGRATION_1_2
+import com.amit_kundu_io.database.data.database.di.MIGRATION_2_3
 
 
 actual class DatabaseBuilderFactory(
@@ -16,6 +17,6 @@ actual class DatabaseBuilderFactory(
         return Room.databaseBuilder<AppDatabase>(
             context = appContext,
             name = dbFile.absolutePath
-        ).addMigrations(MIGRATION_1_2)
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
     }
 }

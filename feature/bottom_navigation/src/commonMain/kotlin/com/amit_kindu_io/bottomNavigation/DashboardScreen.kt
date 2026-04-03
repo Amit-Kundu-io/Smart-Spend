@@ -63,6 +63,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.amit_kundu_io.home.presentation.navigation.HomeRoutes
+import com.amit_kundu_io.transactions.presentation.navigation.TransactionsRoutes
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -83,8 +84,9 @@ fun DashboardScreen() {
             HomeRoutes.HomeRoute::class.qualifiedName -> {
                 true
             }
-
-
+            TransactionsRoutes.TransactionsRoute::class.qualifiedName -> {
+                true
+            }
             else -> {
                 false
             }

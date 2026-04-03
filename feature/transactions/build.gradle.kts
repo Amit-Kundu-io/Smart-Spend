@@ -63,7 +63,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.amit_kundu_io.feature.home"
+    namespace = "com.amit_kundu_io.feature.transactions"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     packaging {
         resources {

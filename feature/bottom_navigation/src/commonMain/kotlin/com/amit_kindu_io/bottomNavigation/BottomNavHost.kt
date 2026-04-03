@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.amit_kundu_io.home.presentation.navigation.HomeRoutes
 import com.amit_kundu_io.home.presentation.navigation.homeNavigation
+import com.amit_kundu_io.transactions.presentation.navigation.transactionsNavigation
 
 
 @Composable
@@ -17,5 +18,6 @@ fun BottomNavHost(
         startDestination = HomeRoutes.HomeGraph,
     ) {
         homeNavigation(navController)
+        transactionsNavigation(navController)
     }
 }

@@ -21,13 +21,14 @@ import com.amit_kundu_io.theme.ui.GradientPurple
 import com.amit_kundu_io.theme.ui.GradientPurpleEnd
 import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.Success
+import com.amit_kundu_io.utilities.Data_Models.Category
 import com.amit_kundu_io.utilities.Data_Models.PaymentMethod
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
 
 data class Transaction(
     val id: String,
     val title: String,
-    val category: Int,
+    val category: Category,
     val categoryEmoji: String,
     val categoryColor: Color,
     val amount: Double,

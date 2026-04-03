@@ -24,8 +24,8 @@ fun Transaction.toEntity(): TransactionEntity {
         id = id,
         title = title,
         amount = amount,
-        type = type?.value ?: 100,
-        category = category,
+        transactionType = type?.value ?: 100,
+        category = category.id,
         note = null,
         date = GlobalUtility.currentEpochSeconds(),
         paymentMethod = paymentMethod?.value ?: 0

@@ -1,5 +1,5 @@
 /**
- * TransactionType.kt
+ * TransactionUiItem.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,15 +13,11 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.utilities.Data_Models
+package com.amit_kundu_io.transactions.presentation
 
-enum class TransactionType(val value: Int) {
-    EXPENSE(100),
-    INCOME(101);
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 
-    companion object {
-        fun fromValue(value: Int): TransactionType? {
-            return values().find { it.value == value }
-        }
-    }
+sealed class TransactionUiItem {
+    data class Header(val title: String) : TransactionUiItem()
+    data class Item(val data: TransactionEntity) : TransactionUiItem()
 }

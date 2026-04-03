@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
     tableName = "transactions",
     indices = [
         Index(value = ["date"]),
-        Index(value = ["type"]),
+        Index(value = ["transactionType"]),
         Index(value = ["category"])
     ]
 )
@@ -18,7 +18,7 @@ data class TransactionEntity(
     val id: String,
     val title: String,
     val amount: Double,
-    val type: Int,
+    val transactionType: Int,
     val category: Int? = null,
     val paymentMethod: Int,
     val note: String? = null,

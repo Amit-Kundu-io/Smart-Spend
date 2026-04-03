@@ -73,6 +73,19 @@ class TransactionRepositoryImpl(
         )
     }
 
+    override suspend fun getPage(
+        page: Int,
+        pageSize: Int,
+        type: Int?
+    ): List<TransactionEntity> {
+        val offset = page * pageSize
+        return dao.getTransactionsPagedByType(
+            type = type,
+            limit = pageSize,
+            offset = offset
+        )
+    }
+
 
     override fun getTotalExpense(): Flow<Double> =
         dao.getTotalByType(TransactionType.EXPENSE.value)
