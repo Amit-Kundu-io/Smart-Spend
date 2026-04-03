@@ -33,6 +33,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -96,8 +98,8 @@ fun DashboardScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .statusBarsPadding()
-            .navigationBarsPadding(),
+            .statusBarsPadding(),
+        //.navigationBarsPadding(),
         bottomBar = {
             AnimatedVisibility(
                 visible = isShowBottomNav,
@@ -116,9 +118,9 @@ fun DashboardScreen() {
                     navController = bottomNavController,
                     items = bottomNavItems
                 )
-
             }
         }
+
     ) { padding ->
         Box(
             modifier = Modifier.then(
@@ -175,9 +177,6 @@ fun AppBottomNav(
 }
 
 
-
-
-
 @Composable
 fun CustomBottomBar(
     items: List<BottomNavItem>,
@@ -206,7 +205,7 @@ fun CustomBottomBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 5.dp, bottom = 10.dp)
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -264,7 +263,6 @@ fun CustomBottomBar(
         }
     }
 }
-
 
 
 /*
