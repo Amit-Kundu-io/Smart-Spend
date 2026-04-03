@@ -18,4 +18,6 @@ package com.amit_kundu_io.home.presentation.transaction_detail
 sealed interface TransactionDetailAction {
     data class ObserveTransaction(val id : String) : TransactionDetailAction
 
+    data class OnDelete(val id : String) : TransactionDetailAction
+
 }

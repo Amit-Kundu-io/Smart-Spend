@@ -22,5 +22,6 @@ import com.amit_kundu_io.theme.Transaction
 @Immutable
 data class TransactionDetailState(
     val isLoading: Boolean = false,
-    val data: Transaction? = null
+    val data: Transaction? = null,
+    val deleteSuccess: Boolean = false
 )

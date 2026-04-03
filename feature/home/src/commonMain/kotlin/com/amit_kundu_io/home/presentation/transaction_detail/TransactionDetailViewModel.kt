@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class TransactionDetailViewModel(
     private val repository: TransactionRepository
@@ -52,6 +53,10 @@ class TransactionDetailViewModel(
             is TransactionDetailAction.ObserveTransaction -> {
                 observeTransaction(action.id)
             }
+
+            is TransactionDetailAction.OnDelete -> {
+                delete(action.id)
+            }
         }
     }
 
@@ -63,6 +68,18 @@ class TransactionDetailViewModel(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    fun delete(id: String) {
+        viewModelScope.launch {
+            try {
+                repository.deleteById(id = id)
+                _state.update { it.copy(deleteSuccess = true) }
+
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
 }

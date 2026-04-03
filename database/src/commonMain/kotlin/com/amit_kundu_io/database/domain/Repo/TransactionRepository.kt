@@ -24,6 +24,7 @@ interface TransactionRepository {
     suspend fun insert(transaction: TransactionEntity)
     suspend fun update(transaction: TransactionEntity)
     suspend fun delete(transaction: TransactionEntity)
+    suspend fun deleteById(id: String)
 
     fun observeById(id: String): Flow<TransactionEntity?>
     fun getAll(): Flow<List<TransactionEntity>>

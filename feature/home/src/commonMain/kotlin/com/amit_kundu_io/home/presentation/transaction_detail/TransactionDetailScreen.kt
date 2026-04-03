@@ -90,7 +90,14 @@ fun TransactionDetailRootScreen(
         viewModel.onAction(TransactionDetailAction.ObserveTransaction(id))
     }
 
+    LaunchedEffect(state.deleteSuccess) {
+        if (state.deleteSuccess) {
+            onBack()
+        }
+    }
+
     TransactionDetailScreen(
+        id = id,
         state = state,
         onAction = viewModel::onAction,
         onBack = onBack,
@@ -103,6 +110,7 @@ fun TransactionDetailRootScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionDetailScreen(
+    id: String,
     state: TransactionDetailState,
     onAction: (TransactionDetailAction) -> Unit,
     onBack: () -> Unit,
@@ -293,6 +301,7 @@ private fun TransactionDetailScreen(
                 DeleteConfirmDialog(
                     transaction = it,
                     onConfirm = {
+                        onAction(TransactionDetailAction.OnDelete(id))
                         showDeleteDialog = false
 
                     },
@@ -312,7 +321,8 @@ private fun Preview() {
             state = TransactionDetailState(),
             onAction = {},
             onBack = {},
-            onEdit = {}
+            onEdit = {},
+            id = ""
         )
     }
 }
