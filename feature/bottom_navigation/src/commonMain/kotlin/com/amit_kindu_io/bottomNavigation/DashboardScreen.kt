@@ -99,8 +99,8 @@ fun DashboardScreen() {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .statusBarsPadding(),
+            .background(Color.White),
+         //   .statusBarsPadding(),
         //.navigationBarsPadding(),
         bottomBar = {
             AnimatedVisibility(
