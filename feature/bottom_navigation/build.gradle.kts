@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.serialization)
+
 }
 
 kotlin {
@@ -33,6 +35,12 @@ kotlin {
 
         }
         commonMain.dependencies {
+            implementation(projects.utilities)
+            implementation(projects.theme)
+            implementation(projects.database)
+            implementation(projects.feature.home)
+
+
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -46,6 +54,8 @@ kotlin {
             implementation(libs.jetbrains.compose.navigation)
 
             implementation(libs.bundles.koin.common)
+            implementation(compose.materialIconsExtended)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

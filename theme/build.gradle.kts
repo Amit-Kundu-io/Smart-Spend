@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.serialization)
+
 }
 
 kotlin {
@@ -56,7 +58,11 @@ kotlin {
         }
     }
 }
-
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "common.resources"
+    generateResClass = auto
+}
 android {
     namespace = "com.amit_kundu_io.theme"
     compileSdk = libs.versions.android.compileSdk.get().toInt()

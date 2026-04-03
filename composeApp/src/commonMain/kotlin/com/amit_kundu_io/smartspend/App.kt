@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.amit_kindu_io.bottomNavigation.DashboardScreen
 import com.amit_kundu_io.home.presentation.home_screen.HomeRootScreen
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import org.jetbrains.compose.resources.painterResource
@@ -25,6 +26,6 @@ import smartspend.composeapp.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     SmartSpendTheme {
-        HomeRootScreen()
+        DashboardScreen()
     }
 }
