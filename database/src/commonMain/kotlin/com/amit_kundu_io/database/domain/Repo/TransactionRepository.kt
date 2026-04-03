@@ -15,7 +15,8 @@
 
 package com.amit_kundu_io.database.domain.Repo
 
-import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
+import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository {
@@ -26,9 +27,15 @@ interface TransactionRepository {
 
     fun getAll(): Flow<List<TransactionEntity>>
     fun getRecent(): Flow<List<TransactionEntity>>
-    fun getByType(type: String): Flow<List<TransactionEntity>>
+    fun getByType(type: TransactionType): Flow<List<TransactionEntity>>
 
     fun getTotalExpense(): Flow<Double>
     fun getTotalIncome(): Flow<Double>
-    fun getBalance(): Flow<Double>
+
+    fun getTotalByTypeInRange(
+        type: Int,
+        start: Long,
+        end: Long
+    ): Flow<Double>
+
 }

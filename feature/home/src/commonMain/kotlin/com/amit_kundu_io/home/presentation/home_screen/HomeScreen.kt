@@ -43,6 +43,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.amit_kundu_io.home.presentation.home_screen.components.BudgetBottomSheet
 import com.amit_kundu_io.home.utility.toUi
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
@@ -65,6 +69,23 @@ fun HomeRootScreen(
     navigateToAddTransaction: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var showSheet by remember { mutableStateOf(false) }
+
+
+    if (showSheet) {
+        BudgetBottomSheet(
+            state = state,
+            onSave = {
+                viewModel.saveBudget(
+                    month = state.selectedMonth,
+                    year = state.selectedYear,
+                    amount = it
+                )
+                showSheet = false
+            },
+            onDismiss = { showSheet = false }
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -76,7 +97,12 @@ fun HomeRootScreen(
         //  Floating Add Button
         ExtendedFloatingActionButton(
             onClick = {
-                navigateToAddTransaction.invoke()
+                if (state.idBudgetSet) {
+                    navigateToAddTransaction.invoke()
+                } else {
+                    showSheet = true
+                }
+
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -148,16 +174,28 @@ private fun HomeScreen(
                 }
             }
             Spacer(Modifier.height(20.dp))
-            BalanceCard(balance = 42850.0, income = 65000.0, expense = 22150.0, streak = 5)
+            BalanceCard(
+                balance = state.balance,
+                income = state.totalIncome,
+                expense = state.totalExpense,
+                streak = 5
+            )
         }
 
         // Scrollable content
         LazyColumn(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            item { BudgetProgressCard(spent = 16500.0, budget = 22000.0) }
+            item {
+                BudgetProgressCard(
+                    spent = state.monthlySpent, budget = state.monthlyBudget,
+                    remaining = state.remainingBudget,
+                    progress = state.budgetUsedPercent,
+                    date = state.monthLabel,
+                )
+            }
             item { StatCardsGrid() }
             item {
                 Row(

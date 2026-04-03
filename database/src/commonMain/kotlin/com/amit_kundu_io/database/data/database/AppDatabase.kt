@@ -20,18 +20,26 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import com.amit_kundu_io.database.data.database.dao.BudgetDao
+import com.amit_kundu_io.database.data.database.dao.TransactionDao
+import com.amit_kundu_io.database.data.database.entity.BudgetEntity
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 
 
 @Database(
-    entities = [TransactionEntity::class],
-    version = 1,
-    exportSchema = false,
+    entities = [
+        TransactionEntity::class,
+        BudgetEntity::class
+    ],
+    version = 2,
+    exportSchema = true
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun dao(): TransactionDao
-}
 
+    abstract fun transactionDao(): TransactionDao
+    abstract fun budgetDao(): BudgetDao
+}
 // The Room compiler generates the `actual` implementations.
 @Suppress("KotlinNoActualForExpect")
 expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {

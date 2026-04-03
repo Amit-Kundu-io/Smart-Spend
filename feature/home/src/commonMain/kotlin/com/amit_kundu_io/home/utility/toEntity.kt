@@ -15,7 +15,7 @@
 
 package com.amit_kundu_io.home.utility
 
-import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.theme.Transaction
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 
@@ -24,7 +24,7 @@ fun Transaction.toEntity(): TransactionEntity {
         id = id,
         title = title,
         amount = amount,
-        type = type?.value ?: 0,
+        type = type?.value ?: 100,
         category = category,
         note = null,
         date = GlobalUtility.currentEpochSeconds(),

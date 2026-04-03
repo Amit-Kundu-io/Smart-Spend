@@ -45,10 +45,11 @@ import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 fun BudgetProgressCard(
     spent: Double,
     budget: Double,
+    remaining: Double,
+    progress: Float,
+    date : String,
     modifier: Modifier = Modifier
 ) {
-    val progress = (spent / budget).toFloat().coerceIn(0f, 1f)
-    val remaining = budget - spent
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = tween(800),
@@ -97,7 +98,7 @@ fun BudgetProgressCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    "Apr 2026",
+                    date,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

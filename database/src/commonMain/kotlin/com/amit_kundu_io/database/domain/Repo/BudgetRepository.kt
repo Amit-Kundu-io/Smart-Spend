@@ -1,5 +1,5 @@
 /**
- * AddTransactionAction.kt
+ * BudgetRepository.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,13 +13,12 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.home.presentation.add_transaction_screen
+package com.amit_kundu_io.database.domain.Repo
 
-import com.amit_kundu_io.database.data.database.entity.TransactionEntity
-import com.amit_kundu_io.theme.Transaction
+import com.amit_kundu_io.database.data.database.entity.BudgetEntity
+import kotlinx.coroutines.flow.Flow
 
-sealed interface AddTransactionAction {
-
-    data class SaveTransaction(val transaction: TransactionEntity) : AddTransactionAction
-
+interface BudgetRepository {
+    fun getBudget(month: Int, year: Int): Flow<BudgetEntity?>
+    suspend fun setBudget(amount: Double, month: Int, year: Int)
 }

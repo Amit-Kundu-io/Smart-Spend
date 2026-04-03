@@ -17,7 +17,7 @@ package com.amit_kundu_io.home.presentation.add_transaction_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.database.domain.Repo.TransactionRepository
 import com.amit_kundu_io.home.utility.toEntity
 import com.amit_kundu_io.theme.Transaction

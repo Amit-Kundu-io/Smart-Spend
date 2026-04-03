@@ -1,4 +1,4 @@
-package com.amit_kundu_io.database.data.database
+package com.amit_kundu_io.database.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.Index

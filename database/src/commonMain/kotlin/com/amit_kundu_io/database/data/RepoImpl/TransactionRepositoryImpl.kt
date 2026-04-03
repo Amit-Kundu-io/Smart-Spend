@@ -15,15 +15,19 @@
 
 package com.amit_kundu_io.database.data.RepoImpl
 
-import com.amit_kundu_io.database.data.database.TransactionDao
-import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.data.database.dao.TransactionDao
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.database.domain.Repo.TransactionRepository
+import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class TransactionRepositoryImpl(
     private val dao: TransactionDao
 ) : TransactionRepository {
+
+    // -------------------------------
+    // CRUD
+    // -------------------------------
 
     override suspend fun insert(transaction: TransactionEntity) {
         dao.insert(transaction)
@@ -37,18 +41,46 @@ class TransactionRepositoryImpl(
         dao.delete(transaction)
     }
 
+    // -------------------------------
+    // FETCH
+    // -------------------------------
+
     override fun getAll(): Flow<List<TransactionEntity>> =
-        dao.getAll().map { it.map { it } }
+        dao.getAll()
 
     override fun getRecent(): Flow<List<TransactionEntity>> =
-        dao.getRecent().map { it.map { it } }
+        dao.getRecent()
 
-    override fun getByType(type: String): Flow<List<TransactionEntity>> =
-        dao.getByType(type).map { it.map { it } }
+    override fun getByType(type: TransactionType): Flow<List<TransactionEntity>> =
+        dao.getByType(type.value)
 
-    override fun getTotalExpense(): Flow<Double> = dao.getTotalExpense()
+    // -------------------------------
+    // FINANCIAL SUMMARY
+    // -------------------------------
 
-    override fun getTotalIncome(): Flow<Double> = dao.getTotalIncome()
+    override fun getTotalIncome(): Flow<Double> =
+        dao.getTotalByType(TransactionType.INCOME.value)
 
-    override fun getBalance(): Flow<Double> = dao.getBalance()
+    override fun getTotalByTypeInRange(
+        type: Int,
+        start: Long,
+        end: Long
+    ): Flow<Double> {
+        return dao.getTotalByTypeInRange(
+            type = type,
+            start = start,
+            end = end
+        )
+    }
+
+
+    override fun getTotalExpense(): Flow<Double> =
+        dao.getTotalByType(TransactionType.EXPENSE.value)
+
+
+//    override fun getCategoryWiseExpense(): Flow<List<CategorySum>> =
+//        dao.getCategoryWiseTotal(TransactionType.EXPENSE.value)
+//
+//    override fun getPaymentStats(): Flow<List<PaymentMethodSum>> =
+//        dao.getPaymentMethodStats()
 }

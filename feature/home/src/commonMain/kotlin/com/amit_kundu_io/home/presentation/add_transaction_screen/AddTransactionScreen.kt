@@ -56,7 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.chip.CategoryChip.CategoryChip
 import com.amit_kundu_io.theme.ui.GradientEnd

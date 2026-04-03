@@ -89,4 +89,94 @@ object GlobalUtility {
 
         return "${date.dayOfMonth} ${date.month.name.take(3)} ${date.year}"
     }
+
+
+    private fun getMonthRange(): Pair<Long, Long> {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+
+        val current = now.toLocalDateTime(zone)
+
+        val startOfMonth = LocalDateTime(
+            year = current.year,
+            month = current.month,
+            dayOfMonth = 1,
+            hour = 0,
+            minute = 0
+        )
+
+        val endOfMonth = startOfMonth
+            .date
+            .plus(1, DateTimeUnit.MONTH)
+            .minus(1, DateTimeUnit.DAY)
+            .atTime(23, 59, 59)
+
+        val startMillis = startOfMonth.toInstant(zone).toEpochMilliseconds()
+        val endMillis = endOfMonth.toInstant(zone).toEpochMilliseconds()
+
+        return startMillis to endMillis
+    }
+
+    fun getCurrentMonth(): Int {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+        return now.toLocalDateTime(zone).monthNumber
+    }
+
+    fun getCurrentYear(): Int {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+        return now.toLocalDateTime(zone).year
+    }
+
+    fun getMonthStartEpoch(): Long {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+
+        val current = now.toLocalDateTime(zone)
+
+        val startOfMonth = LocalDateTime(
+            year = current.year,
+            month = current.month,
+            dayOfMonth = 1,
+            hour = 0,
+            minute = 0,
+            second = 0
+        )
+
+        return startOfMonth.toInstant(zone).epochSeconds
+    }
+    fun getMonthEndEpoch(): Long {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+
+        val current = now.toLocalDateTime(zone)
+
+        val startOfNextMonth = LocalDate(
+            year = current.year,
+            month = current.month,
+            dayOfMonth = 1
+        ).plus(1, DateTimeUnit.MONTH)
+
+        val endOfMonth = startOfNextMonth
+            .minus(1, DateTimeUnit.DAY)
+            .atTime(23, 59, 59)
+
+        return endOfMonth.toInstant(zone).epochSeconds
+    }
+
+    fun getMonthYearLabel(): String {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+
+        val current = now.toLocalDateTime(zone)
+
+        val monthName = current.month.name
+            .lowercase()
+            .replaceFirstChar { it.uppercase() }
+            .take(3)
+
+        return "$monthName ${current.year}"
+    }
+
 }

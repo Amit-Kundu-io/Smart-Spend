@@ -16,7 +16,7 @@
 package com.amit_kundu_io.database.data.database.mapper
 
 import androidx.room.Transaction
-import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 
 //fun TransactionEntity.toDomain() = Transaction(
 //    id = id,

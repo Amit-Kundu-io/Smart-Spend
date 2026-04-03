@@ -15,7 +15,7 @@
 
 package com.amit_kundu_io.home.utility
 
-import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.theme.Transaction
 import com.amit_kundu_io.theme.utility.ThemeUtility.mapCategory
 import com.amit_kundu_io.utilities.Data_Models.Category
