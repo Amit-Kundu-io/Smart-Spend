@@ -17,12 +17,18 @@ package com.amit_kundu_io.home.presentation.home_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amit_kundu_io.database.domain.Repo.TransactionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val repo: TransactionRepository
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -31,6 +37,7 @@ class HomeViewModel : ViewModel() {
         .onStart {
             if (!hasLoadedInitialData) {
                 /** Load initial data here **/
+                getRecentTransaction()
                 hasLoadedInitialData = true
             }
         }
@@ -44,6 +51,15 @@ class HomeViewModel : ViewModel() {
         when (action) {
             else -> TODO("Handle actions")
         }
+    }
+
+    private fun getRecentTransaction() {
+        repo.getRecent()
+            .onEach { list ->
+                _state.update {
+                    it.copy(recentTransactions = list)
+                }
+            }.launchIn(viewModelScope)
     }
 
 }

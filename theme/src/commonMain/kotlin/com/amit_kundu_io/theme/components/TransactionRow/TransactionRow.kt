@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.amit_kundu_io.theme.Transaction
 import com.amit_kundu_io.theme.ui.ExpenseRed
 import com.amit_kundu_io.theme.ui.IncomeGreen
+import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 
 @Composable
@@ -76,14 +77,18 @@ fun TransactionRow(
         }
         // Amount
         Text(
-            if (transaction.isIncome) "+₹${GlobalUtility.formatCurrency(transaction.amount)}" else "-₹${
+            if (transaction.type?.value == TransactionType.INCOME.value) "+₹${
+                GlobalUtility.formatCurrency(
+                    transaction.amount
+                )
+            }" else "-₹${
                 GlobalUtility.formatCurrency(
                     transaction.amount
                 )
             }",
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
-            color = if (transaction.isIncome) IncomeGreen else ExpenseRed
+            color = if (transaction.type?.value == TransactionType.INCOME.value) IncomeGreen else ExpenseRed
         )
     }
 }

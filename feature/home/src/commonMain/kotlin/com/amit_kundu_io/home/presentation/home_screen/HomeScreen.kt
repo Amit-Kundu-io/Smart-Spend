@@ -28,12 +28,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -51,12 +50,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.amit_kundu_io.home.utility.toUi
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
 import com.amit_kundu_io.theme.components.cards.BalanceCard
 import com.amit_kundu_io.theme.components.cards.BudgetProgressCard
 import com.amit_kundu_io.theme.components.cards.StatCardsGrid
-import com.amit_kundu_io.theme.sampleTransactions
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -175,15 +174,9 @@ private fun HomeScreen(
                     TextButton(onClick = { onNavigate("") }) { Text("See All") }
                 }
             }
-            item {
-                ElevatedCard(shape = RoundedCornerShape(16.dp)) {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        sampleTransactions.take(5).forEachIndexed { idx, tx ->
-                            TransactionRow(transaction = tx)
-                            if (idx < 4) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                        }
-                    }
-                }
+            items(state.recentTransactions) { transaction ->
+                TransactionRow(transaction = transaction.toUi())
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
         }
     }

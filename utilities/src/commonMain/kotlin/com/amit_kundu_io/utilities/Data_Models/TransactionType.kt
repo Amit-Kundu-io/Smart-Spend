@@ -1,5 +1,5 @@
 /**
- * AddTransactionAction.kt
+ * TransactionType.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,13 +13,16 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.home.presentation.add_transaction_screen
+package com.amit_kundu_io.utilities.Data_Models
 
-import com.amit_kundu_io.database.data.database.TransactionEntity
-import com.amit_kundu_io.theme.Transaction
+enum class TransactionType(val value: Int) {
+    EXPENSE(100),
+    INCOME(101),
+    TRANSFER(102);
 
-sealed interface AddTransactionAction {
-
-    data class SaveTransaction(val transaction: TransactionEntity) : AddTransactionAction
-
+    companion object {
+        fun fromValue(value: Int): TransactionType? {
+            return values().find { it.value == value }
+        }
+    }
 }

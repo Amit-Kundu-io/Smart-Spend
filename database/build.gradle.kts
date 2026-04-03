@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,6 +5,11 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
+
 }
 
 kotlin {
@@ -30,13 +34,26 @@ kotlin {
 
             implementation(libs.bundles.koin.android)
 
+            implementation(libs.koin.compose)
+
         }
         commonMain.dependencies {
+
+            implementation(projects.utilities)
 
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.jetbrains.compose.navigation)
 
             implementation(libs.bundles.koin.common)
+
+            implementation(libs.koin.core)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+
+        }
+        iosMain.dependencies {
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -67,3 +84,13 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+}

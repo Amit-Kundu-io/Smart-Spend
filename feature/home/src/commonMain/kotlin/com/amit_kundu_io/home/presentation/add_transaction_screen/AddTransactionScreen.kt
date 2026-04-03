@@ -56,7 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amit_kundu_io.theme.TransactionType
+import com.amit_kundu_io.database.data.database.TransactionEntity
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.chip.CategoryChip.CategoryChip
 import com.amit_kundu_io.theme.ui.GradientEnd
@@ -65,6 +65,11 @@ import com.amit_kundu_io.theme.ui.GradientPurpleEnd
 import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import com.amit_kundu_io.theme.ui.Success
+import com.amit_kundu_io.utilities.Data_Models.Category
+import com.amit_kundu_io.utilities.Data_Models.PaymentMethod
+import com.amit_kundu_io.utilities.Data_Models.TransactionType
+import com.amit_kundu_io.utilities.global_utility.GlobalUtility
+import com.amit_kundu_io.utilities.global_utility.PlatformGlobulUtility
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -91,8 +96,8 @@ private fun AddTransactionScreen(
     var amount by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf("food") }
-    var selectedPayment by remember { mutableStateOf("upi") }
+    var selectedCategory by remember { mutableStateOf(100) }
+    var selectedPayment by remember { mutableStateOf(100) }
 
     val gradientColors = when (selectedType) {
         TransactionType.EXPENSE -> listOf(
@@ -129,10 +134,10 @@ private fun AddTransactionScreen(
             // Type selector
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 listOf(
-                    TransactionType.EXPENSE to "💸 Expense",
-                    TransactionType.INCOME to "💵 Income",
-                    TransactionType.TRANSFER to "🔄 Transfer"
-                ).forEach { (type, label) ->
+                    TransactionType.EXPENSE,
+                    TransactionType.INCOME,
+                    TransactionType.TRANSFER
+                ).forEach { type ->
                     val isSelected = selectedType == type
                     OutlinedButton(
                         onClick = { selectedType = type },
@@ -151,7 +156,7 @@ private fun AddTransactionScreen(
                         contentPadding = PaddingValues(vertical = 10.dp)
                     ) {
                         Text(
-                            label,
+                            type.name,
                             fontSize = 12.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )
@@ -228,27 +233,16 @@ private fun AddTransactionScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.height(8.dp))
-                    val cats = listOf(
-                        "food" to ("🍽" to "Food"),
-                        "transport" to ("🚗" to "Transport"),
-                        "shopping" to ("🛍" to "Shopping"),
-                        "util" to ("⚡" to "Utilities"),
-                        "health" to ("💊" to "Health"),
-                        "ent" to ("🎮" to "Entertainment"),
-                        "housing" to ("🏠" to "Housing"),
-                        "edu" to ("📚" to "Education")
-                    )
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        cats.forEach { (id, pair) ->
-                            val (emoji, label) = pair
+                        Category.all.forEach { category ->
                             CategoryChip(
-                                emoji = emoji,
-                                label = label,
-                                selected = selectedCategory == id,
-                                onClick = { selectedCategory = id })
+                                emoji = category.icon,
+                                label = category.name,
+                                selected = selectedCategory == category.id,
+                                onClick = { selectedCategory = category.id })
                         }
                     }
                 }
@@ -262,16 +256,12 @@ private fun AddTransactionScreen(
                     )
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf(
-                            "upi" to "💳 UPI",
-                            "card" to "🏦 Card",
-                            "cash" to "💵 Cash"
-                        ).forEach { (id, label) ->
+                        PaymentMethod.all.forEach { payment ->
                             CategoryChip(
-                                emoji = "",
-                                label = label,
-                                selected = selectedPayment == id,
-                                onClick = { selectedPayment = id })
+                                emoji = payment.icon,
+                                label = payment.name,
+                                selected = selectedPayment == payment.value,
+                                onClick = { selectedPayment = payment.value })
                         }
                     }
                 }
@@ -296,7 +286,19 @@ private fun AddTransactionScreen(
             }
             item {
                 Button(
-                    onClick = { /* save logic */ },
+                    onClick = {
+                        val transaction = TransactionEntity(
+                            id = PlatformGlobulUtility.generateUUID(),
+                            title = title,
+                            amount = amount.toDoubleOrNull() ?: 0.0,
+                            type = selectedType.value,
+                            category = selectedCategory,
+                            paymentMethod = selectedPayment,
+                            note = note,
+                            date = GlobalUtility.currentEpochSeconds()
+                        )
+                        onAction(AddTransactionAction.SaveTransaction(transaction))
+                    },
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)

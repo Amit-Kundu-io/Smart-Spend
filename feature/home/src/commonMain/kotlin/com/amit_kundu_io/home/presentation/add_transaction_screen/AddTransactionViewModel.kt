@@ -17,12 +17,19 @@ package com.amit_kundu_io.home.presentation.add_transaction_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amit_kundu_io.database.data.database.TransactionEntity
+import com.amit_kundu_io.database.domain.Repo.TransactionRepository
+import com.amit_kundu_io.home.utility.toEntity
+import com.amit_kundu_io.theme.Transaction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class AddTransactionViewModel : ViewModel() {
+class AddTransactionViewModel(
+    private val repo: TransactionRepository
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -42,7 +49,16 @@ class AddTransactionViewModel : ViewModel() {
 
     fun onAction(action: AddTransactionAction) {
         when (action) {
-            else -> TODO("Handle actions")
+            is AddTransactionAction.SaveTransaction -> {
+                saveTransaction(action.transaction)
+            }
+        }
+    }
+
+
+    fun saveTransaction(transection: TransactionEntity) {
+        viewModelScope.launch {
+            repo.insert(transection)
         }
     }
 

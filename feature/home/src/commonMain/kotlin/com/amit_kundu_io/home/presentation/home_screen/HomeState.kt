@@ -16,8 +16,10 @@
 package com.amit_kundu_io.home.presentation.home_screen
 
 import androidx.compose.runtime.Immutable
+import com.amit_kundu_io.database.data.database.TransactionEntity
 
 @Immutable
 data class HomeState(
     val isLoading: Boolean = false,
+    val recentTransactions: List<TransactionEntity> = emptyList(),
 )

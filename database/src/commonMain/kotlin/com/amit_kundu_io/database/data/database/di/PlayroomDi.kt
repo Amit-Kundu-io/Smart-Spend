@@ -1,5 +1,6 @@
 /**
- * AddTransactionAction.kt
+ *
+ *PlayroomDi.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,13 +14,8 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.home.presentation.add_transaction_screen
+package com.amit_kundu_io.database.data.database.di
 
-import com.amit_kundu_io.database.data.database.TransactionEntity
-import com.amit_kundu_io.theme.Transaction
+import org.koin.core.module.Module
 
-sealed interface AddTransactionAction {
-
-    data class SaveTransaction(val transaction: TransactionEntity) : AddTransactionAction
-
-}
+expect fun playroomDi() : Module

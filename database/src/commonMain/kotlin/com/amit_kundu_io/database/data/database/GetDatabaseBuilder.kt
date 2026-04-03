@@ -1,5 +1,5 @@
 /**
- * AddTransactionAction.kt
+ * GetDatabaseBuilder.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,13 +13,11 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.home.presentation.add_transaction_screen
+package com.amit_kundu_io.database.data.database
 
-import com.amit_kundu_io.database.data.database.TransactionEntity
-import com.amit_kundu_io.theme.Transaction
 
-sealed interface AddTransactionAction {
+import androidx.room.RoomDatabase
 
-    data class SaveTransaction(val transaction: TransactionEntity) : AddTransactionAction
-
+expect class DatabaseBuilderFactory {
+    fun createBuilder(): RoomDatabase.Builder<AppDatabase>
 }
