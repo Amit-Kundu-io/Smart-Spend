@@ -33,7 +33,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.CreditCard
@@ -82,6 +81,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TransactionDetailRootScreen(
     id: String,
+    onBack: () -> Unit = {},
+    onEdit: (String) -> Unit = {},
     viewModel: TransactionDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -91,7 +92,11 @@ fun TransactionDetailRootScreen(
 
     TransactionDetailScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onBack = onBack,
+        onEdit ={
+            onEdit(id)
+        }
     )
 }
 
@@ -100,6 +105,8 @@ fun TransactionDetailRootScreen(
 private fun TransactionDetailScreen(
     state: TransactionDetailState,
     onAction: (TransactionDetailAction) -> Unit,
+    onBack: () -> Unit,
+    onEdit: () -> Unit,
 ) {
 
     // In a real app, load from ViewModel/repository by txId
@@ -117,7 +124,7 @@ private fun TransactionDetailScreen(
             TopAppBar(
                 title = { Text("Transaction Detail") },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -238,46 +245,13 @@ private fun TransactionDetailScreen(
                                 }
                             }
                             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                            DetailRow(key = "Note", value = "Weekly groceries")
+                            DetailRow(key = "Note", value = state.data?.note ?: "-")
                             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                            DetailRow(key = "Transaction ID", value = "#TX240402-001")
+                            DetailRow(key = "Transaction ID", value = state.data?.id)
                         }
                     }
                 }
 
-                // Budget status banner
-                item {
-                    Surface(
-                        color = SuccessContainer,
-                        shape = RoundedCornerShape(14.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(12.dp, 12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            Icon(
-                                Icons.Default.CheckCircle,
-                                null,
-                                tint = Success,
-                                modifier = Modifier.size(22.dp)
-                            )
-                            Column {
-                                Text(
-                                    "Within daily limit",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color(0xFF1B5E20)
-                                )
-                                Text(
-                                    "₹80 remaining today",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = Success
-                                )
-                            }
-                        }
-                    }
-                }
 
                 // Action buttons
                 item {
@@ -287,7 +261,7 @@ private fun TransactionDetailScreen(
                     ) {
                         // Edit
                         Button(
-                            onClick = { },
+                            onClick = onEdit,
                             modifier = Modifier.weight(1f).height(52.dp),
                             shape = RoundedCornerShape(50.dp)
                         ) {
@@ -336,7 +310,9 @@ private fun Preview() {
     SmartSpendTheme {
         TransactionDetailScreen(
             state = TransactionDetailState(),
-            onAction = {}
+            onAction = {},
+            onBack = {},
+            onEdit = {}
         )
     }
 }

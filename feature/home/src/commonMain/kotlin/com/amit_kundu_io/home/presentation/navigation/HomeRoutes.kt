@@ -25,5 +25,8 @@ object HomeRoutes {
     data object HomeRoute
 
     @Serializable
-    data object AddTransactionRoute
+    data class AddTransactionRoute(val id: String? = null)
+
+    @Serializable
+    data class TransactionDetailRoute(val id: String)
 }

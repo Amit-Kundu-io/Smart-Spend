@@ -42,12 +42,12 @@ import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 @Composable
 fun TransactionRow(
     transaction: Transaction,
-    onClick: () -> Unit = {}
+    onClick: (String) -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(onClick = { onClick(transaction.id) })
             .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

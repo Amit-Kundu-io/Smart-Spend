@@ -46,9 +46,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -74,9 +71,16 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AddTransactionRootScreen(
     viewModel: AddTransactionViewModel = koinViewModel(),
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    transactionId: String? = null,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(transactionId) {
+        transactionId?.let {
+            viewModel.onAction(AddTransactionAction.LoadTransaction(it))
+        }
+    }
 
     LaunchedEffect(state.isAddSuccessfully) {
         if (state.isAddSuccessfully) {
@@ -97,14 +101,14 @@ private fun AddTransactionScreen(
     onAction: (AddTransactionAction) -> Unit,
     onBack: () -> Unit
 ) {
-    var selectedType by remember { mutableStateOf(TransactionType.EXPENSE) }
-    var amount by remember { mutableStateOf("") }
-    var title by remember { mutableStateOf("") }
-    var note by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf(100) }
-    var selectedPayment by remember { mutableStateOf(100) }
+//    var selectedType by remember { mutableStateOf(TransactionType.EXPENSE) }
+//    var amount by remember { mutableStateOf("") }
+//    var title by remember { mutableStateOf("") }
+//    var note by remember { mutableStateOf("") }
+//    var selectedCategory by remember { mutableStateOf(100) }
+//    var selectedPayment by remember { mutableStateOf(100) }
 
-    val gradientColors = when (selectedType) {
+    val gradientColors = when (state.type) {
         TransactionType.EXPENSE -> listOf(
             GradientStart,
             GradientEnd
@@ -126,7 +130,7 @@ private fun AddTransactionScreen(
                 }
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    "Add Transaction",
+                    "${if (state.isEditMode) "Edit" else "Add"} Transaction",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -139,9 +143,9 @@ private fun AddTransactionScreen(
                     TransactionType.EXPENSE,
                     TransactionType.INCOME,
                 ).forEach { type ->
-                    val isSelected = selectedType == type
+                    val isSelected = state.type == type
                     OutlinedButton(
-                        onClick = { selectedType = type },
+                        onClick = { onAction(AddTransactionAction.OnTypeChange(type)) },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = if (isSelected) Color.White.copy(
@@ -177,7 +181,7 @@ private fun AddTransactionScreen(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "₹${amount.ifEmpty { "0" }}",
+                    "₹${state.amount.ifEmpty { "0" }}",
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -199,8 +203,8 @@ private fun AddTransactionScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     OutlinedTextField(
-                        value = title,
-                        onValueChange = { title = it },
+                        value = state.title,
+                        onValueChange = { onAction(AddTransactionAction.OnTitleChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("e.g. Grocery Shopping") },
                         shape = RoundedCornerShape(12.dp),
@@ -217,8 +221,8 @@ private fun AddTransactionScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     OutlinedTextField(
-                        value = amount,
-                        onValueChange = { amount = it.filter { c -> c.isDigit() || c == '.' } },
+                        value = state.amount,
+                        onValueChange = { onAction(AddTransactionAction.OnAmountChange(it.filter { c -> c.isDigit() || c == '.' })) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("0.00") },
                         shape = RoundedCornerShape(12.dp),
@@ -226,7 +230,7 @@ private fun AddTransactionScreen(
                         prefix = { Text("₹") })
                 }
             }
-            if (selectedType.value == TransactionType.EXPENSE.value) {
+            if (state.type.value == TransactionType.EXPENSE.value) {
                 item {
                     Column {
                         Text(
@@ -243,8 +247,14 @@ private fun AddTransactionScreen(
                                 CategoryChip(
                                     emoji = category.icon,
                                     label = category.name,
-                                    selected = selectedCategory == category.id,
-                                    onClick = { selectedCategory = category.id })
+                                    selected = state.category == category.id,
+                                    onClick = {
+                                        onAction(
+                                            AddTransactionAction.OnCategoryChange(
+                                                category.id
+                                            )
+                                        )
+                                    })
                             }
                         }
                     }
@@ -263,8 +273,8 @@ private fun AddTransactionScreen(
                             CategoryChip(
                                 emoji = payment.icon,
                                 label = payment.name,
-                                selected = selectedPayment == payment.value,
-                                onClick = { selectedPayment = payment.value })
+                                selected = state.paymentMethod == payment.value,
+                                onClick = { onAction(AddTransactionAction.OnPaymentChange(payment.value)) })
                         }
                     }
                 }
@@ -278,8 +288,8 @@ private fun AddTransactionScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     OutlinedTextField(
-                        value = note,
-                        onValueChange = { note = it },
+                        value = state.note,
+                        onValueChange = { onAction(AddTransactionAction.OnNoteChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("Add a note...") },
                         shape = RoundedCornerShape(12.dp),
@@ -290,17 +300,7 @@ private fun AddTransactionScreen(
             item {
                 Button(
                     onClick = {
-                        val transaction = TransactionEntity(
-                            id = PlatformGlobulUtility.generateUUID(),
-                            title = title,
-                            amount = amount.toDoubleOrNull() ?: 0.0,
-                            transactionType = selectedType.value,
-                            category = selectedCategory,
-                            paymentMethod = selectedPayment,
-                            note = note,
-                            date = GlobalUtility.currentEpochSeconds()
-                        )
-                        onAction(AddTransactionAction.SaveTransaction(transaction))
+                        onAction(AddTransactionAction.OnSave)
                     },
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     shape = RoundedCornerShape(16.dp),

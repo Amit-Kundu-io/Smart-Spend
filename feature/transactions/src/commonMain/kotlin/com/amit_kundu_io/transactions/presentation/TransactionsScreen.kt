@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.amit_kundu_io.theme.components.CustomTopBar.CustomTopBar
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
@@ -99,11 +100,7 @@ private fun TransactionsScreen(
         // Search + Filter header
         Surface(tonalElevation = 2.dp) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                Text(
-                    "Transactions",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                //CustomTopBar(title = "Transactions")
                 Spacer(Modifier.height(12.dp))
 
                 Spacer(Modifier.height(10.dp))

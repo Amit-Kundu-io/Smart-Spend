@@ -16,9 +16,20 @@
 package com.amit_kundu_io.home.presentation.add_transaction_screen
 
 import androidx.compose.runtime.Immutable
+import com.amit_kundu_io.utilities.Data_Models.TransactionType
 
 @Immutable
 data class AddTransactionState(
     val isLoading: Boolean = false,
-    val isAddSuccessfully: Boolean = false
+    val isAddSuccessfully: Boolean = false,
+
+
+    val id: String? = null,
+    val type: TransactionType = TransactionType.EXPENSE,
+    val amount: String = "",
+    val title: String = "",
+    val note: String = "",
+    val category: Int = 100,
+    val paymentMethod: Int = 100,
+    val isEditMode: Boolean = false,
 )

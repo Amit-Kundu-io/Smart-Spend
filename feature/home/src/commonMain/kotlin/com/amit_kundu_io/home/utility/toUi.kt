@@ -38,6 +38,7 @@ fun TransactionEntity.toUi(): Transaction {
         type = TransactionType.fromValue(transactionType),
         date = GlobalUtility.epochToSmartDate(date),
         time = GlobalUtility.epochToTime(date),
-        paymentMethod = PaymentMethod.fromId(paymentMethod)
+        paymentMethod = PaymentMethod.fromId(paymentMethod),
+        note = note
     )
 }

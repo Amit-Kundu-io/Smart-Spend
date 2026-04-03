@@ -35,7 +35,8 @@ data class Transaction(
     val type: TransactionType?,
     val date: String,
     val time: String,
-    val paymentMethod: PaymentMethod?
+    val paymentMethod: PaymentMethod?,
+    val note: String?
 )
 
 data class CategorySpending(

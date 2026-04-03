@@ -20,7 +20,7 @@ enum class TransactionType(val value: Int) {
     INCOME(101);
 
     companion object {
-        fun fromValue(value: Int): TransactionType? {
+        fun fromValue(value: Int?): TransactionType? {
             return values().find { it.value == value }
         }
     }

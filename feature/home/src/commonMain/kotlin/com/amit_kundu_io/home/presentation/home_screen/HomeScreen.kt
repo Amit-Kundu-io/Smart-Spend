@@ -35,7 +35,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amit_kundu_io.home.presentation.home_screen.components.BudgetBottomSheet
 import com.amit_kundu_io.home.utility.toUi
+import com.amit_kundu_io.theme.components.CustomTopBar.CustomTopBar
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
 import com.amit_kundu_io.theme.components.cards.BalanceCard
@@ -61,7 +61,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeRootScreen(
     viewModel: HomeViewModel = koinViewModel(),
-    navigateToAddTransaction: () -> Unit = {}
+    navigateToAddTransaction: () -> Unit = {},
+    navigateTODetailsScreen: (id: String) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showSheet by remember { mutableStateOf(false) }
@@ -86,7 +87,8 @@ fun HomeRootScreen(
 
         HomeScreen(
             state = state,
-            onAction = viewModel::onAction
+            onAction = viewModel::onAction,
+            navigateTODetailsScreen = navigateTODetailsScreen
         )
 
         //  Floating Add Button
@@ -126,28 +128,14 @@ fun HomeRootScreen(
 private fun HomeScreen(
     state: HomeState,
     onAction: (HomeAction) -> Unit,
-    onNavigate: (String) -> Unit = {}
+    onNavigate: (String) -> Unit = {},
+    navigateTODetailsScreen: (id: String) -> Unit
+
 ) {
+
     Column(modifier = Modifier.fillMaxSize()) {
         // Gradient header
         GradientHeader {
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            )
-            {
-                Column {
-                    Text(
-                        "Good morning,",
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            color = Color.White.copy(alpha = 0.75f),
-                            fontSize = 16.sp
-                        ),
-
-                    )
-                }
-            }
             Spacer(Modifier.height(20.dp))
             BalanceCard(
                 balance = state.balance,
@@ -183,12 +171,12 @@ private fun HomeScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
-
-                    TextButton(onClick = { onNavigate("") }) { Text("See All") }
                 }
             }
             items(state.recentTransactions) { transaction ->
-                TransactionRow(transaction = transaction.toUi())
+                TransactionRow(transaction = transaction.toUi()) {
+                    navigateTODetailsScreen(it)
+                }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
         }
@@ -200,6 +188,7 @@ private fun HomeScreen(
 private fun Preview() {
     SmartSpendTheme {
         HomeScreen(
-            state = HomeState(), onAction = {})
+            state = HomeState(), onAction = {},
+            navigateTODetailsScreen = {})
     }
 }
