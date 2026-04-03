@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -33,6 +32,12 @@ kotlin {
 
         }
         commonMain.dependencies {
+            implementation(projects.utilities)
+            implementation(projects.theme)
+            implementation(projects.database)
+            implementation(projects.feature.bottomNavigation)
+            implementation(projects.feature.home)
+
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)

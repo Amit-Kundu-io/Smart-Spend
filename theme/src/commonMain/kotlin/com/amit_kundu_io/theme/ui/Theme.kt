@@ -73,7 +73,7 @@ private val SpendWiseDarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun SpendWiseTheme(
+fun SmartSpendTheme(
     darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {

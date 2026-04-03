@@ -48,6 +48,8 @@ kotlin {
             implementation(libs.jetbrains.compose.navigation)
 
             implementation(libs.bundles.koin.common)
+
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
