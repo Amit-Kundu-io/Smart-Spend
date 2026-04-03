@@ -26,12 +26,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,13 +62,37 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeRootScreen(
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel(),
+    navigateToAddTransaction: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    HomeScreen(
-        state = state, onAction = viewModel::onAction
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        HomeScreen(
+            state = state,
+            onAction = viewModel::onAction
+        )
+
+        //  Floating Add Button
+        ExtendedFloatingActionButton(
+            onClick = {
+                navigateToAddTransaction.invoke()
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            containerColor = Color(0xFF0F5F5C)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add"
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Add Expense")
+        }
+    }
+
 }
 
 @Composable

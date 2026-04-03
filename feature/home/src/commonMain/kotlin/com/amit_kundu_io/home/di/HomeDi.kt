@@ -15,10 +15,12 @@
 
 package com.amit_kundu_io.home.di
 
+import com.amit_kundu_io.home.presentation.add_transaction_screen.AddTransactionViewModel
 import com.amit_kundu_io.home.presentation.home_screen.HomeViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 fun homeDi() = module {
     viewModelOf(::HomeViewModel)
+    viewModelOf(::AddTransactionViewModel)
 }

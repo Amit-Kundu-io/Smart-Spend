@@ -1,5 +1,5 @@
 /**
- * HomeRoutes.kt
+ * AddTransactionState.kt
  *
  * Author      : Amit Kundu
  * Created On  : 03/04/2026
@@ -13,17 +13,11 @@
  * code readability and quality.
  */
 
-package com.amit_kundu_io.home.presentation.navigation
+package com.amit_kundu_io.home.presentation.add_transaction_screen
 
-import kotlinx.serialization.Serializable
+import androidx.compose.runtime.Immutable
 
-@Serializable
-object HomeRoutes {
-    @Serializable
-    data object HomeGraph
-    @Serializable
-    data object HomeRoute
-
-    @Serializable
-    data object AddTransactionRoute
-}
+@Immutable
+data class AddTransactionState(
+    val isLoading: Boolean = false,
+)
