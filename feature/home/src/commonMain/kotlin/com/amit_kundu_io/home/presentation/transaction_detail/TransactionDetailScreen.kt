@@ -101,7 +101,7 @@ fun TransactionDetailRootScreen(
         state = state,
         onAction = viewModel::onAction,
         onBack = onBack,
-        onEdit ={
+        onEdit = {
             onEdit(id)
         }
     )
@@ -243,7 +243,7 @@ private fun TransactionDetailScreen(
                                     Icon(
                                         Icons.Outlined.CreditCard,
                                         null,
-                                        modifier = Modifier.size(14.dp)
+                                        modifier = Modifier.size(18.dp)
                                     )
                                     Text(
                                         state.data?.paymentMethod?.label ?: "-",
@@ -254,8 +254,6 @@ private fun TransactionDetailScreen(
                             }
                             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                             DetailRow(key = "Note", value = state.data?.note ?: "-")
-                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                            DetailRow(key = "Transaction ID", value = state.data?.id)
                         }
                     }
                 }
@@ -263,6 +261,7 @@ private fun TransactionDetailScreen(
 
                 // Action buttons
                 item {
+                    Spacer(modifier = Modifier.height(30.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -271,23 +270,31 @@ private fun TransactionDetailScreen(
                         Button(
                             onClick = onEdit,
                             modifier = Modifier.weight(1f).height(52.dp),
-                            shape = RoundedCornerShape(50.dp)
+                            shape = RoundedCornerShape(15.dp)
                         ) {
-                            Icon(Icons.Default.Edit, null, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Edit, null, modifier = Modifier.size(20.dp))
                             Spacer(Modifier.width(6.dp))
-                            Text("Edit", style = MaterialTheme.typography.titleSmall)
+                            Text(
+                                "Edit", style = MaterialTheme.typography.titleSmall.copy(
+                                    fontSize = 18.sp,
+                                    lineHeight = 20.sp
+                                )
+                            )
                         }
                         // Delete
                         OutlinedButton(
                             onClick = { showDeleteDialog = true },
                             modifier = Modifier.weight(1f).height(52.dp),
-                            shape = RoundedCornerShape(50.dp),
+                            shape = RoundedCornerShape(15.dp),
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
                             border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.error)
                         ) {
-                            Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Delete, null, modifier = Modifier.size(20.dp))
                             Spacer(Modifier.width(6.dp))
-                            Text("Delete", style = MaterialTheme.typography.titleSmall)
+                            Text("Delete", style = MaterialTheme.typography.titleSmall.copy(
+                                fontSize = 18.sp,
+                                lineHeight = 20.sp
+                            ),)
                         }
                     }
                     Spacer(Modifier.height(16.dp))

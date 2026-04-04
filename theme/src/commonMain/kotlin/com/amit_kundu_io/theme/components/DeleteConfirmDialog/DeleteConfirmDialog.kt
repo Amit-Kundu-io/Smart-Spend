@@ -16,6 +16,7 @@
 package com.amit_kundu_io.theme.components.DeleteConfirmDialog
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,13 +41,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.amit_kundu_io.theme.Transaction
 import com.amit_kundu_io.theme.ui.ExpenseRed
+import com.amit_kundu_io.theme.ui.GradientEnd
 import com.amit_kundu_io.theme.ui.IncomeGreen
+import com.amit_kundu_io.theme.ui.lightGreen
+import com.amit_kundu_io.utilities.Data_Models.Category
+import com.amit_kundu_io.utilities.Data_Models.PaymentMethod
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 
@@ -63,7 +70,7 @@ fun DeleteConfirmDialog(
         icon = {
             // Red icon container
             Surface(
-                color = MaterialTheme.colorScheme.errorContainer,
+                color = GradientEnd.copy(alpha = 0.1f),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.size(64.dp)
             ) {
@@ -98,12 +105,13 @@ fun DeleteConfirmDialog(
                 Spacer(Modifier.height(14.dp))
                 // Transaction preview card
                 Surface(
-                    color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f),
+                    color = GradientEnd.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.errorContainer)
+                    border = BorderStroke(1.dp, GradientEnd.copy(alpha = .4f))
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                           .padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
@@ -129,7 +137,11 @@ fun DeleteConfirmDialog(
                             )
                         }
                         Text(
-                            if (transaction.type?.value == TransactionType.INCOME.value) "+₹${GlobalUtility.formatCurrency(transaction.amount)}"
+                            if (transaction.type?.value == TransactionType.INCOME.value) "+₹${
+                                GlobalUtility.formatCurrency(
+                                    transaction.amount
+                                )
+                            }"
                             else "-₹${GlobalUtility.formatCurrency(transaction.amount)}",
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
@@ -143,22 +155,60 @@ fun DeleteConfirmDialog(
             Button(
                 onClick = onConfirm,
                 modifier = Modifier.fillMaxWidth().height(50.dp),
-                shape = RoundedCornerShape(50.dp),
+                shape = RoundedCornerShape(15.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
-                Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                Icon(Icons.Default.Delete, null, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(6.dp))
-                Text("Yes, delete it", style = MaterialTheme.typography.titleSmall)
+                Text(
+                    "Yes, delete it", style = MaterialTheme.typography.titleSmall.copy(
+                        fontSize = 18.sp,
+                        lineHeight = 20.sp
+                    )
+                )
             }
         },
         dismissButton = {
+            Spacer(modifier = Modifier.height(20.dp))
             OutlinedButton(
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth().height(48.dp),
-                shape = RoundedCornerShape(50.dp)
+                shape = RoundedCornerShape(15.dp)
             ) {
-                Text("Cancel, keep it")
+                Text(
+                    "Cancel, keep it",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontSize = 18.sp,
+                        lineHeight = 20.sp
+                    )
+                )
             }
         }
     )
 }
+
+
+@Preview(showBackground = true)
+@Composable
+fun DeleteConfirmDialogPreview() {
+    val sampleTransaction = Transaction(
+        id = "1",
+        title = "Dinner at Restaurant",
+        category = Category.FOOD,
+        categoryEmoji = "🍽️",
+        categoryColor = Color.Red,
+        amount = 120.0,
+        type = TransactionType.EXPENSE,
+        date = "2026-04-03",
+        time = "20:15",
+        paymentMethod = PaymentMethod.CARD,
+        note = "Family dinner"
+    )
+
+    DeleteConfirmDialog(
+        transaction = sampleTransaction,
+        onConfirm = {},
+        onDismiss = {}
+    )
+}
+

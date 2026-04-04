@@ -35,7 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.amit_kundu_io.theme.components.chip.M3StatusChip.M3StatusChip
 import com.amit_kundu_io.theme.ui.Success
 import com.amit_kundu_io.utilities.Data_Models.ChipType
@@ -47,7 +49,7 @@ fun BudgetProgressCard(
     budget: Double,
     remaining: Double,
     progress: Float,
-    date : String,
+    date: String,
     modifier: Modifier = Modifier
 ) {
     val animatedProgress by animateFloatAsState(
@@ -63,7 +65,12 @@ fun BudgetProgressCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Budget This Month", style = MaterialTheme.typography.titleSmall)
+                Text(
+                    "Budget This Month", style = MaterialTheme.typography.titleSmall.copy(
+                        fontSize = 15.sp,
+                        lineHeight = 17.sp
+                    )
+                )
                 M3StatusChip(
                     label = "${(progress * 100).toInt()}% used",
                     chipType = if (progress > 0.85f) ChipType.ERROR else if (progress > 0.70f) ChipType.WARNING else ChipType.SUCCESS
@@ -73,12 +80,20 @@ fun BudgetProgressCard(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(
                     "${GlobalUtility.formatCurrency(spent)} spent",
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontSize = 13.sp,
+                        lineHeight = 15.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    "₹${ GlobalUtility.formatCurrency(remaining)} left",
-                    style = MaterialTheme.typography.bodySmall,
+                    "₹${GlobalUtility.formatCurrency(remaining)} left",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontSize = 13.sp,
+                        lineHeight = 15.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
                     color = Success,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -93,16 +108,37 @@ fun BudgetProgressCard(
             Spacer(Modifier.height(6.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(
-                    "of ₹${ GlobalUtility.formatCurrency(budget)} budget",
-                    style = MaterialTheme.typography.labelSmall,
+                    "of ₹${GlobalUtility.formatCurrency(budget)} budget",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 13.sp,
+                        lineHeight = 15.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     date,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 13.sp,
+                        lineHeight = 15.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
     }
+}
+
+
+@Preview
+@Composable
+fun showUi() {
+    BudgetProgressCard(
+        spent = 10010.00,
+        budget = 2344.00,
+        remaining = 1000.00,
+        progress = 0.4f,
+        date = "10-12-12",
+    )
 }
