@@ -16,6 +16,7 @@
 package com.amit_kundu_io.transactions.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,15 +27,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -159,6 +166,29 @@ private fun TransactionsScreen(
             state = lazyListState,
             contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 50.dp)
         ) {
+
+            if (state.uiItems.isEmpty()){
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                            .height(120.dp)
+                            .border(1.dp, lightGreen, RoundedCornerShape(15.dp))
+                            .background(
+                                lightGreen.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(15.dp)
+                            ),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            "No Data Added",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.sp
+                            )
+                        )
+                    }
+                }
+            }
 
             items(state.uiItems) { item ->
 

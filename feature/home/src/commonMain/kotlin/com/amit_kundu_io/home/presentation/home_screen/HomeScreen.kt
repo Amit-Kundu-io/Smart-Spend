@@ -16,6 +16,7 @@
 package com.amit_kundu_io.home.presentation.home_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,8 +31,11 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -52,13 +56,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amit_kundu_io.home.presentation.home_screen.components.BudgetBottomSheet
 import com.amit_kundu_io.home.utility.toUi
-import com.amit_kundu_io.theme.components.CustomTopBar.CustomTopBar
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
 import com.amit_kundu_io.theme.components.cards.BalanceCard
 import com.amit_kundu_io.theme.components.cards.BudgetProgressCard
 import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
+import com.amit_kundu_io.theme.ui.lightGreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -96,7 +100,14 @@ fun HomeRootScreen(
             HomeScreen(
                 state = state,
                 onAction = viewModel::onAction,
-                navigateTODetailsScreen = navigateTODetailsScreen
+                navigateTODetailsScreen = navigateTODetailsScreen,
+                navigateToAddTransaction = {
+                    if (state.idBudgetSet) {
+                        navigateToAddTransaction.invoke()
+                    } else {
+                        showSheet = true
+                    }
+                }
             )
 
             //  Floating Add Button
@@ -140,7 +151,8 @@ private fun HomeScreen(
     state: HomeState,
     onAction: (HomeAction) -> Unit,
     onNavigate: (String) -> Unit = {},
-    navigateTODetailsScreen: (id: String) -> Unit
+    navigateTODetailsScreen: (id: String) -> Unit,
+    navigateToAddTransaction: () -> Unit
 
 ) {
 
@@ -170,7 +182,7 @@ private fun HomeScreen(
                     date = state.monthLabel,
                 )
             }
-           // item { StatCardsGrid() }
+            // item { StatCardsGrid() }
             item {
                 Row(
                     Modifier.fillMaxWidth(),
@@ -184,11 +196,51 @@ private fun HomeScreen(
                     )
                 }
             }
-            items(state.recentTransactions) { transaction ->
-                TransactionRow(transaction = transaction.toUi()) {
-                    navigateTODetailsScreen(it)
+            if (state.recentTransactions.isNullOrEmpty()) {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                            .height(120.dp)
+                            .border(1.dp, lightGreen, RoundedCornerShape(15.dp))
+                            .background(
+                                lightGreen.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(15.dp)
+                            ),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            "No Data Added",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.sp
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Button(
+                            onClick = {
+                                navigateToAddTransaction.invoke()
+                            },
+                            modifier = Modifier.height(35.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                        ) {
+
+                            Icon(Icons.Default.Add, null)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Add Expense", style = MaterialTheme.typography.titleSmall)
+                        }
+
+                    }
                 }
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            } else {
+                items(state.recentTransactions) { transaction ->
+                    TransactionRow(transaction = transaction.toUi()) {
+                        navigateTODetailsScreen(it)
+                    }
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                }
             }
         }
     }
@@ -200,6 +252,8 @@ private fun Preview() {
     SmartSpendTheme {
         HomeScreen(
             state = HomeState(), onAction = {},
-            navigateTODetailsScreen = {})
+            navigateTODetailsScreen = {},
+            navigateToAddTransaction = {}
+            )
     }
 }

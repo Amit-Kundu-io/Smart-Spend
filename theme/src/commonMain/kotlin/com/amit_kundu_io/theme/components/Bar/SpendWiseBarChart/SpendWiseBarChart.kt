@@ -44,34 +44,51 @@ fun SpendWiseBarChart(bars: List<BarData>, modifier: Modifier = Modifier) {
 
     val maxVal = bars.maxOfOrNull { it.value }?.takeIf { it > 0f } ?: 1f
 
+
     Row(
         modifier = modifier.height(100.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.Bottom
     ) {
         bars.forEach { bar ->
+
+            val normalizedTarget = (bar.value / maxVal).coerceIn(0f, 1f)
+
             val animatedH by animateFloatAsState(
-                targetValue = bar.value,
+                targetValue = normalizedTarget,
                 animationSpec = tween(600),
                 label = "bar"
             )
+
+            val safeAnimatedH = when {
+                animatedH.isNaN() || animatedH.isInfinite() -> 0f
+                else -> animatedH.coerceIn(0f, 1f)
+            }
+
+            val safeTopWeight = (1f - safeAnimatedH).coerceAtLeast(0.001f)
+            val safeBarWeight = safeAnimatedH.coerceAtLeast(0.001f)
 
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(Modifier.weight((1f - animatedH).coerceAtLeast(0.01f)))
+                Spacer(Modifier.weight(safeTopWeight))
+
                 Box(
                     modifier = Modifier
-                        .weight(animatedH.coerceAtLeast(0.05f))
+                        .weight(safeBarWeight)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
                         .background(
-                            if (bar.isHighlighted) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.primaryContainer
+                            if (bar.isHighlighted)
+                                MaterialTheme.colorScheme.primary
+                            else
+                                MaterialTheme.colorScheme.primaryContainer
                         )
                 )
+
                 Spacer(Modifier.height(4.dp))
+
                 Text(
                     bar.label,
                     style = MaterialTheme.typography.labelSmall,
