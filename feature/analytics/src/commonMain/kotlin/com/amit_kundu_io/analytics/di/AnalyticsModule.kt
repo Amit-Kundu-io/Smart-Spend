@@ -16,9 +16,13 @@
 package com.amit_kundu_io.analytics.di
 
 import com.amit_kundu_io.analytics.presentation.analytics_screen.AnalyticsViewModel
+import com.amit_kundu_io.analytics.presentation.analytics_screen.MonthlyScreen.MonthlyViewModel
+import com.amit_kundu_io.analytics.presentation.analytics_screen.WeeklyScreen.WeeklyViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 fun analyticsModule() = module {
     viewModelOf(::AnalyticsViewModel)
+    viewModelOf(::WeeklyViewModel)
+    viewModelOf(::MonthlyViewModel)
 }

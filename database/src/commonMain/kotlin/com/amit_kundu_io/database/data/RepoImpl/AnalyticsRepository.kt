@@ -18,7 +18,7 @@ package com.amit_kundu_io.database.data.RepoImpl
 import com.amit_kundu_io.database.data.database.dao.AnalyticsDao
 import com.amit_kundu_io.database.data.database.dao.CategoryExpense
 import com.amit_kundu_io.database.data.database.dao.DailyExpense
-import com.amit_kundu_io.database.data.database.dao.TransactionDao
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.database.domain.Repo.AnalyticsRepository
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import kotlinx.coroutines.flow.Flow
@@ -53,5 +53,14 @@ class AnalyticsRepositoryImpl(
 
     override fun getTransactionCount(start: Long, end: Long): Flow<Int> {
         return dao.getTransactionCount(start, end)
+    }
+    override fun getWeekly(start: Long, end: Long) =
+        dao.getWeeklyBreakdown(TransactionType.EXPENSE.value, start, end)
+
+    override fun getCurrentMonthTransactions(
+        start: Long,
+        end: Long
+    ): Flow<List<TransactionEntity>> {
+        return dao.getCurrentMonthTransactions(start, end)
     }
 }

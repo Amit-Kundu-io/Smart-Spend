@@ -212,4 +212,56 @@ object GlobalUtility {
             .toEpochMilliseconds() / 1000
     }
 
+    fun currentMonthRange(): Pair<Long, Long> {
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val year = now.year
+        val month = now.month
+
+        //  Calculate last day of month
+        val lastDayOfMonth = when (month) {
+            Month.JANUARY, Month.MARCH, Month.MAY, Month.JULY,
+            Month.AUGUST, Month.OCTOBER, Month.DECEMBER -> 31
+            Month.APRIL, Month.JUNE, Month.SEPTEMBER, Month.NOVEMBER -> 30
+            Month.FEBRUARY -> if (isLeapYear(year)) 29 else 28
+        }
+
+        //  Start of month
+        val startMillis = LocalDate(year, month, 1)
+            .atStartOfDayIn(TimeZone.currentSystemDefault())
+            .toEpochMilliseconds()
+
+        //  End of month
+        val endMillis = LocalDate(year, month, lastDayOfMonth)
+            .atTime(LocalTime(23, 59, 59))
+            .toInstant(TimeZone.currentSystemDefault())
+            .toEpochMilliseconds()
+
+        // Convert millis → seconds (10 digits)
+        return Pair(startMillis / 1000, endMillis / 1000)
+    }
+
+    private fun isLeapYear(year: Int): Boolean {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+    }
+
+    fun currentWeekRange(): Pair<Long, Long> {
+        val tz = TimeZone.currentSystemDefault()
+        val now = Clock.System.now().toLocalDateTime(tz)
+
+        // Day of week index (Monday = 1 … Sunday = 7)
+        val dayOfWeek = now.date.dayOfWeek.isoDayNumber
+
+        // Start of week = subtract (dayOfWeek - 1) days
+        val startDate = now.date.minus(dayOfWeek - 1, DateTimeUnit.DAY)
+        val startMillis = startDate.atStartOfDayIn(tz).toEpochMilliseconds() / 1000
+
+        // End of week = add (7 - dayOfWeek) days
+        val endDate = now.date.plus(7 - dayOfWeek, DateTimeUnit.DAY)
+        val endMillis = endDate.atTime(LocalTime(23, 59, 59))
+            .toInstant(tz)
+            .toEpochMilliseconds() / 1000
+
+        return startMillis to endMillis
+    }
+
 }

@@ -1,6 +1,5 @@
-
 /**
- * AnalyticsAction.kt
+ * Tabs.kt
  *
  * Author      : Amit Kundu
  * Created On  : 04/04/2026
@@ -15,6 +14,11 @@
  */
 
 package com.amit_kundu_io.analytics.presentation.analytics_screen
-sealed interface AnalyticsAction {
+
+enum class AnalyticsPeriodTab(val id: Int, val label: String) {
+    WEEK(0, "Week"),
+    MONTH(1, "Month"),
+    THREE_MONTHS(2, "3M"),
+    YEAR(3, "Year");
 
 }

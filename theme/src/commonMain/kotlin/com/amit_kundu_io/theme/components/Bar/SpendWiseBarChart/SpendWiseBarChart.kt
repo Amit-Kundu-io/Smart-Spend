@@ -35,9 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.amit_kundu_io.utilities.Logger.Logger
 
 @Composable
 fun SpendWiseBarChart(bars: List<BarData>, modifier: Modifier = Modifier) {
+    Logger.d("SpendWiseBarChart", "bars: $bars")
     if (bars.isEmpty()) return
 
     val maxVal = bars.maxOfOrNull { it.value }?.takeIf { it > 0f } ?: 1f
@@ -49,7 +51,7 @@ fun SpendWiseBarChart(bars: List<BarData>, modifier: Modifier = Modifier) {
     ) {
         bars.forEach { bar ->
             val animatedH by animateFloatAsState(
-                targetValue = (bar.value / maxVal).coerceIn(0f, 1f),
+                targetValue = bar.value,
                 animationSpec = tween(600),
                 label = "bar"
             )

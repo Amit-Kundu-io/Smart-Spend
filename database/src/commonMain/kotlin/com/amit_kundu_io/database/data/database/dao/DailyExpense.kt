@@ -24,3 +24,8 @@ data class CategoryExpense(
     val category: Int?,
     val total: Double
 )
+
+data class WeeklyExpense(
+    val weekIndex: Int,
+    val total: Double
+)

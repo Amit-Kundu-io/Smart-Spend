@@ -24,11 +24,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -44,18 +41,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amit_kundu_io.theme.CategorySpending
-import com.amit_kundu_io.theme.components.Bar.CategorySpendingBar.CategorySpendingBar
-import com.amit_kundu_io.theme.components.Bar.SpendWiseBarChart.BarData
-import com.amit_kundu_io.theme.components.Bar.SpendWiseBarChart.SpendWiseBarChart
+import com.amit_kundu_io.analytics.presentation.analytics_screen.MonthlyScreen.MonthlyRootScreen
+import com.amit_kundu_io.analytics.presentation.analytics_screen.WeeklyScreen.WeeklyRootScreen
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
-import com.amit_kundu_io.theme.components.cards.StatCardsGrid
-import com.amit_kundu_io.theme.sampleCategories
 import com.amit_kundu_io.theme.ui.GradientPurple
 import com.amit_kundu_io.theme.ui.GradientPurpleEnd
-import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
-import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -63,6 +54,7 @@ fun AnalyticsRootScreen(
     viewModel: AnalyticsViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
 
     AnalyticsScreen(
         state = state,
@@ -76,20 +68,14 @@ private fun AnalyticsScreen(
     onAction: (AnalyticsAction) -> Unit,
 ) {
 
-    var selectedPeriod by remember { mutableStateOf("Week") }
-    val periods = listOf("Week", "Month", "3M", "Year")
-    val barData = state.dailyUi.map {
-        BarData(
-            label = it.day,
-            value = it.amount.toFloat(),
-            isHighlighted = false
-        )
-    }
-
-    SpendWiseBarChart(
-        bars = barData,
-        modifier = Modifier.fillMaxWidth()
+    var selectedPeriod by remember { mutableStateOf(AnalyticsPeriodTab.WEEK) }
+    val periods = listOf(
+        AnalyticsPeriodTab.WEEK,
+        AnalyticsPeriodTab.MONTH,
+        AnalyticsPeriodTab.THREE_MONTHS,
+        AnalyticsPeriodTab.YEAR
     )
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         GradientHeader(gradientColors = listOf(GradientPurple, GradientPurpleEnd)) {
@@ -121,93 +107,29 @@ private fun AnalyticsScreen(
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
                         Text(
-                            period,
+                            period.label,
                             fontSize = 12.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )
                     }
                 }
             }
-            Spacer(Modifier.height(16.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                Column {
-                    Text(
-                        "TOTAL SPENT",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.75f)
-                    ); Spacer(Modifier.height(2.dp)); Text(
-                    "₹${GlobalUtility.formatCurrency(state.totalSpent)}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                }
-                Column {
-                    Text(
-                        "AVG/DAY",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.75f)
-                    ); Spacer(Modifier.height(2.dp)); Text(
-                    "₹${GlobalUtility.formatCurrency(state.avgPerDay)}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                }
-                Column {
-                    Text(
-                        "VS LAST",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.75f)
-                    ); Spacer(Modifier.height(2.dp)); Text(
-                    "${state.percentageChange.toInt()}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color(0xFFA5F3A0),
-                    fontWeight = FontWeight.Bold
-                )
-                }
-            }
         }
 
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            item {
-                ElevatedCard(shape = RoundedCornerShape(16.dp)) {
-                    Column(Modifier.padding(16.dp)) {
-                        Text(
-                            "Daily Spending (₹)",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(Modifier.height(12.dp))
-                        SpendWiseBarChart(bars = barData, modifier = Modifier.fillMaxWidth())
-                    }
-                }
+
+        when (selectedPeriod) {
+            AnalyticsPeriodTab.WEEK -> {
+                WeeklyRootScreen()
             }
-            item {
-                ElevatedCard(shape = RoundedCornerShape(16.dp)) {
-                    Column(Modifier.padding(16.dp)) {
-                        Text(
-                            "Category Breakdown",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(Modifier.height(12.dp))
-                        state.categoryUi.forEach { CategorySpendingBar(CategorySpending(
-                            name = it.name,
-                            emoji = it.emoji,
-                            amount = it.amount,
-                            percentage = it.percent,
-                            color = GradientStart
-                        )) }
-                    }
-                }
+
+            AnalyticsPeriodTab.MONTH -> {
+                MonthlyRootScreen()
             }
-            item { StatCardsGrid() }
+
+            AnalyticsPeriodTab.THREE_MONTHS -> {}
+            AnalyticsPeriodTab.YEAR -> {}
         }
+
     }
 }
 

@@ -17,13 +17,7 @@ package com.amit_kundu_io.analytics.presentation.analytics_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.amit_kundu_io.analytics.presentation.analytics_screen.models.CategoryUi
-import com.amit_kundu_io.analytics.presentation.analytics_screen.models.DailyUi
-import com.amit_kundu_io.database.data.database.dao.CategoryExpense
-import com.amit_kundu_io.database.data.database.dao.DailyExpense
 import com.amit_kundu_io.database.domain.Repo.AnalyticsRepository
-import com.amit_kundu_io.utilities.Data_Models.Category
-import com.amit_kundu_io.utilities.Logger.Logger
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,10 +29,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.math.roundToInt
-import kotlin.time.Instant
 
 class AnalyticsViewModel(
     private val repo: AnalyticsRepository
@@ -74,30 +64,20 @@ class AnalyticsViewModel(
         viewModelScope.launch {
             combine(
                 repo.getTotalExpense(start, end),
-                repo.getDailySpending(start, end),
-                repo.getCategoryBreakdown(start, end),
                 repo.getTransactionCount(start, end)
-            ) { total, daily, category, count ->
+            ) { total, count ->
 
-                val days = ((end - start) / (24 * 60 * 60)).coerceAtLeast(1) // dynamic day count
+                val days = ((end - start) / (24 * 60 * 60)).coerceAtLeast(1)
                 val avg = total / days
-
-                val dailyUi = mapDailySpendingToUi(daily)
-                val categoryUi = mapCategoryToUi(category, total)
 
                 AnalyticsState(
                     isLoading = false,
                     totalSpent = total,
                     avgPerDay = avg,
-                    dailySpending = daily,
-                    categoryBreakdown = category,
                     transactionCount = count,
-                    dailyUi = dailyUi,
-                    categoryUi = categoryUi
                 )
             }
                 .catch { e ->
-                    // log error, emit fallback state
                     _state.update { it.copy(isLoading = false, error = e.message ?: "Error") }
                 }
                 .onEach { state ->
@@ -107,52 +87,4 @@ class AnalyticsViewModel(
         }
     }
 
-
-    fun mapDailySpendingToUi(
-        list: List<DailyExpense>
-    ): List<DailyUi> {
-
-        val zone = TimeZone.currentSystemDefault()
-
-        return list.map {
-
-            val day = Instant
-                .fromEpochMilliseconds(it.date * 1000)
-                .toLocalDateTime(zone)
-                .dayOfWeek
-                .name
-                .take(3)
-
-            DailyUi(
-                day = day,
-                amount = it.total
-            )
-        }
-    }
-
-    fun mapCategoryToUi(
-        list: List<CategoryExpense>,
-        total: Double
-    ): List<CategoryUi> {
-
-        return list.map {
-
-            val percent = if (total > 0) {
-                ((it.total / total) * 100).toFloat()
-            } else 0f
-
-            val rounded = (percent * 10).roundToInt() / 10f
-
-            Logger.d("Calculation_Debug","Total ${total} ,CategoryExpense ${it.total}, Percentage ${percent}")
-
-            val cat = Category.fromId(it.category ?: 100)
-
-            CategoryUi(
-                name = cat.label,
-                amount = it.total,
-                percent = rounded,
-                emoji = cat.icon
-            )
-        }
-    }
 }

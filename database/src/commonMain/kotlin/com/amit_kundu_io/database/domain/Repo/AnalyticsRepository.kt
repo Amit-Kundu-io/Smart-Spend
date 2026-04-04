@@ -17,6 +17,8 @@ package com.amit_kundu_io.database.domain.Repo
 
 import com.amit_kundu_io.database.data.database.dao.CategoryExpense
 import com.amit_kundu_io.database.data.database.dao.DailyExpense
+import com.amit_kundu_io.database.data.database.dao.WeeklyExpense
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
 interface AnalyticsRepository {
@@ -28,4 +30,12 @@ interface AnalyticsRepository {
     fun getCategoryBreakdown(start: Long, end: Long): Flow<List<CategoryExpense>>
 
     fun getTransactionCount(start: Long, end: Long): Flow<Int>
+
+    fun getWeekly(start: Long, end: Long): Flow<List<WeeklyExpense>>
+
+    fun getCurrentMonthTransactions(
+        start: Long,
+        end: Long
+    ): Flow<List<TransactionEntity>>
+
 }

@@ -17,6 +17,7 @@ package com.amit_kundu_io.database.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -73,4 +74,35 @@ interface AnalyticsDao {
         start: Long,
         end: Long
     ): Flow<Int>
+
+    @Query(
+        """
+    SELECT 
+        ((date - :start) / 604800) as weekIndex,
+        SUM(amount) as total
+    FROM transactions
+    WHERE transactionType = :type AND date BETWEEN :start AND :end
+    GROUP BY weekIndex
+"""
+    )
+    fun getWeeklyBreakdown(
+        type: Int,
+        start: Long,
+        end: Long
+    ): Flow<List<WeeklyExpense>>
+
+
+    @Query(
+        """
+    SELECT * 
+    FROM transactions
+    WHERE date BETWEEN :start AND :end
+    ORDER BY date ASC
+    """
+    )
+    fun getCurrentMonthTransactions(
+        start: Long,
+        end: Long
+    ): Flow<List<TransactionEntity>>
+
 }
