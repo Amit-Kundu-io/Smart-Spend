@@ -18,5 +18,6 @@ package com.amit_kundu_io.transactions.presentation
 sealed interface TransactionsAction {
     object OnNextPage : TransactionsAction
     data class OnRefresh(val type: Int? = null) : TransactionsAction
+    data class OnQueryChange(val query : String) : TransactionsAction
 
 }

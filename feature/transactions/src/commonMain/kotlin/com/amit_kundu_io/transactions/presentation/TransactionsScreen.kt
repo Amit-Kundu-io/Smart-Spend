@@ -26,23 +26,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,6 +77,9 @@ fun TransactionsRootScreen(
     viewModel: TransactionsViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
+
+    // Handle disposing of the ViewModel
 
     DisposableEffect(Unit) {
         onDispose {
@@ -91,7 +96,7 @@ fun TransactionsRootScreen(
     ) {
         TransactionsScreen(
             state = state,
-            onAction = viewModel::onAction
+            onAction = viewModel::onAction, query = query
         )
     }
 
@@ -102,6 +107,7 @@ fun TransactionsRootScreen(
 private fun TransactionsScreen(
     state: TransactionsState,
     onAction: (TransactionsAction) -> Unit,
+    query: String,
 ) {
 
 
@@ -136,7 +142,40 @@ private fun TransactionsScreen(
             Column(modifier = Modifier.fillMaxWidth().background(GradientEnd).padding(16.dp)) {
                 //CustomTopBar(title = "Transactions")
                 Spacer(Modifier.height(12.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = query,
+                        onValueChange = { onAction(TransactionsAction.OnQueryChange(it)) },
+                        modifier = Modifier.weight(1f),
+                        placeholder = { Text("Search transactions...") },
+                        leadingIcon = { Icon(Icons.Default.Search, null) },
+                        shape = RoundedCornerShape(50.dp),
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
 
+                            //  Container (background)
+                            focusedContainerColor = Color.White,
+                            unfocusedContainerColor = Color.White,
+
+                            //  Border colors
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = Color.LightGray,
+
+                            // Optional (nice UX)
+                            cursorColor = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                    Surface(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = CircleShape,
+                        modifier = Modifier.size(42.dp)
+                    ) {
+                        IconButton(onClick = {}) { Icon(Icons.Default.FilterList, null) }
+                    }
+                }
                 Spacer(Modifier.height(10.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(filters) { filter ->
@@ -207,15 +246,8 @@ private fun TransactionsScreen(
                     }
 
                     is TransactionUiItem.Item -> {
-                        ElevatedCard(
-                            shape = RoundedCornerShape(16.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                                TransactionRow(transaction = item.data.toUi())
-                            }
-                        }
-                        Spacer(Modifier.height(4.dp))
+                        TransactionRow(transaction = item.data.toUi())
+                        Spacer(Modifier.height(7.dp))
                     }
                 }
             }
@@ -241,7 +273,8 @@ private fun Preview() {
     SmartSpendTheme {
         TransactionsScreen(
             state = TransactionsState(),
-            onAction = {}
+            onAction = {},
+            query = "",
         )
     }
 }

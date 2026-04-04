@@ -98,4 +98,32 @@ interface TransactionDao {
 
         @Query("SELECT * FROM transactions WHERE id = :id LIMIT 1")
         fun observeById(id: String): Flow<TransactionEntity?>
+
+        @Query(
+                """
+    SELECT * FROM transactions
+    WHERE 
+        (:type IS NULL OR transactionType = :type)
+
+        AND (:startDate IS NULL OR date >= :startDate)
+        AND (:endDate IS NULL OR date <= :endDate)
+
+        AND (
+            :query IS NULL OR :query = '' OR
+            LOWER(title) LIKE '%' || LOWER(:query) || '%' OR
+            CAST(amount AS TEXT) LIKE '%' || :query || '%'
+        )
+
+    ORDER BY date DESC
+    LIMIT :limit OFFSET :offset
+"""
+        )
+        suspend fun getTransactionsPaged(
+                type: Int?,
+                query: String?,
+                startDate: Long?,
+                endDate: Long?,
+                limit: Int,
+                offset: Int
+        ): List<TransactionEntity>
 }

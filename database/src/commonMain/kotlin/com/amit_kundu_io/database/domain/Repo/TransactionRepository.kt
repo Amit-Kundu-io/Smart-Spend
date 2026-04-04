@@ -43,7 +43,10 @@ interface TransactionRepository {
     suspend fun getPage(
         page: Int,
         pageSize : Int,
-        type: Int? = null
+        type: Int? = null,
+        startDate: Long? = null,
+        endDate: Long? = null,
+        query: String? = null
     ): List<TransactionEntity>
 
 }

@@ -21,9 +21,14 @@ import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.database.domain.Repo.TransactionRepository
 import com.amit_kundu_io.utilities.Logger.Logger
 import com.amit_kundu_io.utilities.paginator.Paginator
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -47,6 +52,7 @@ class TransactionsViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 /** Load initial data here **/
+                observeSearch()
                 hasLoadedInitialData = true
             }
         }
@@ -56,8 +62,28 @@ class TransactionsViewModel(
             initialValue = TransactionsState()
         )
 
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query
+
     private var currentPage = 0
     private val pageSize = 20
+
+
+    private fun observeSearch() {
+        viewModelScope.launch {
+            _query
+                .drop(1)
+                .debounce(300)
+                .map { it.trim() }
+                .distinctUntilChanged()
+                .collectLatest { query ->
+                    //Api CAll
+                    refresh()
+                }
+        }
+    }
+
+
 
 
     fun onAction(action: TransactionsAction) {
@@ -68,7 +94,12 @@ class TransactionsViewModel(
 
             is TransactionsAction.OnRefresh -> {
                 val type = if (action.type == 99) null else action.type
+                _query.value = ""
                 refresh(type)
+            }
+
+            is TransactionsAction.OnQueryChange -> {
+                _query.value = action.query
             }
         }
     }
@@ -84,6 +115,7 @@ class TransactionsViewModel(
                 Logger.d("PAGINATION", "Requesting page: $currentPage")
 
                 val result = repo.getPage(
+                    query = query.value.ifEmpty { null },
                     type = state.value.currentFilter,
                     page = currentPage,
                     pageSize = pageSize

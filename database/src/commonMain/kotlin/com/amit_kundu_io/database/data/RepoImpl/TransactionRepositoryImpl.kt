@@ -84,11 +84,23 @@ class TransactionRepositoryImpl(
     override suspend fun getPage(
         page: Int,
         pageSize: Int,
-        type: Int?
+        type: Int?,
+        startDate: Long?,
+        endDate: Long?,
+        query: String?
     ): List<TransactionEntity> {
         val offset = page * pageSize
-        return dao.getTransactionsPagedByType(
+//        return dao.getTransactionsPagedByType(
+//            type = type,
+//            limit = pageSize,
+//            offset = offset
+//        )
+
+        return dao.getTransactionsPaged(
             type = type,
+            query = query,
+            startDate = startDate,
+            endDate = endDate,
             limit = pageSize,
             offset = offset
         )
