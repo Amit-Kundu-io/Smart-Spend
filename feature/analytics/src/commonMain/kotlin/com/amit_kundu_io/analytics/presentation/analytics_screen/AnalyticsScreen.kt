@@ -16,6 +16,7 @@
 package com.amit_kundu_io.analytics.presentation.analytics_screen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -44,8 +46,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amit_kundu_io.analytics.presentation.analytics_screen.MonthlyScreen.MonthlyRootScreen
 import com.amit_kundu_io.analytics.presentation.analytics_screen.WeeklyScreen.WeeklyRootScreen
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
-import com.amit_kundu_io.theme.ui.GradientPurple
-import com.amit_kundu_io.theme.ui.GradientPurpleEnd
+import com.amit_kundu_io.theme.ui.GradientEnd
+import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -77,8 +79,13 @@ private fun AnalyticsScreen(
     )
 
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        GradientHeader(gradientColors = listOf(GradientPurple, GradientPurpleEnd)) {
+    Column(
+        Modifier.fillMaxSize()
+            .background(GradientStart)
+            .statusBarsPadding()
+            .background(Color.White)
+    ) {
+        GradientHeader(gradientColors = listOf(GradientStart, GradientEnd)) {
             Text(
                 "Analytics",
                 style = MaterialTheme.typography.titleLarge,

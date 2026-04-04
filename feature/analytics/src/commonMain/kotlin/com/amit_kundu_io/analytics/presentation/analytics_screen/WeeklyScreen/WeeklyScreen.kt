@@ -43,6 +43,7 @@ import com.amit_kundu_io.theme.components.Bar.CategorySpendingBar.CategorySpendi
 import com.amit_kundu_io.theme.components.Bar.SpendWiseBarChart.SpendWiseBarChart
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.cards.StatCardsGrid
+import com.amit_kundu_io.theme.ui.GradientEnd
 import com.amit_kundu_io.theme.ui.GradientPurple
 import com.amit_kundu_io.theme.ui.GradientPurpleEnd
 import com.amit_kundu_io.theme.ui.GradientStart
@@ -73,7 +74,7 @@ private fun WeeklyScreen(
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
-        GradientHeader(gradientColors = listOf(GradientPurple, GradientPurpleEnd)) {
+        GradientHeader(gradientColors =listOf(GradientStart, GradientEnd)) {
             Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                 Column {
                     Text(

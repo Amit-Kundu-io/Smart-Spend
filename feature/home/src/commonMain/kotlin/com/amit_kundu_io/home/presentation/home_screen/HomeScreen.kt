@@ -15,6 +15,7 @@
 
 package com.amit_kundu_io.home.presentation.home_screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -55,6 +57,7 @@ import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
 import com.amit_kundu_io.theme.components.cards.BalanceCard
 import com.amit_kundu_io.theme.components.cards.BudgetProgressCard
+import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -82,45 +85,53 @@ fun HomeRootScreen(
             onDismiss = { showSheet = false }
         )
     }
+    Column (
+        Modifier.fillMaxSize()
+            .background(GradientStart)
+            .statusBarsPadding()
+            .background(Color.White)
+    ){
+        Box(modifier = Modifier.fillMaxSize()) {
 
-    Box(modifier = Modifier.fillMaxSize()) {
-
-        HomeScreen(
-            state = state,
-            onAction = viewModel::onAction,
-            navigateTODetailsScreen = navigateTODetailsScreen
-        )
-
-        //  Floating Add Button
-        ExtendedFloatingActionButton(
-            onClick = {
-                if (state.idBudgetSet) {
-                    navigateToAddTransaction.invoke()
-                } else {
-                    showSheet = true
-                }
-
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            containerColor = Color(0xFF0F5F5C)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add",
-                tint = Color.White
+            HomeScreen(
+                state = state,
+                onAction = viewModel::onAction,
+                navigateTODetailsScreen = navigateTODetailsScreen
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                "Add Expense",
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = Color.White,
-                    fontSize = 15.sp
+
+            //  Floating Add Button
+            ExtendedFloatingActionButton(
+                onClick = {
+                    if (state.idBudgetSet) {
+                        navigateToAddTransaction.invoke()
+                    } else {
+                        showSheet = true
+                    }
+
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                containerColor = Color(0xFF0F5F5C)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add",
+                    tint = Color.White
                 )
-            )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    "Add Expense",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
+                )
+            }
         }
+
     }
+
 
 }
 

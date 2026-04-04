@@ -15,6 +15,7 @@
 
 package com.amit_kundu_io.transactions.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -32,6 +34,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,14 +48,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amit_kundu_io.theme.components.CustomTopBar.CustomTopBar
 import com.amit_kundu_io.theme.components.TransactionRow.TransactionRow
+import com.amit_kundu_io.theme.ui.GradientEnd
+import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
+import com.amit_kundu_io.theme.ui.lightGreen
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import com.amit_kundu_io.utilities.Logger.Logger
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -71,10 +76,19 @@ fun TransactionsRootScreen(
         }
     }
 
-    TransactionsScreen(
-        state = state,
-        onAction = viewModel::onAction
-    )
+    Column(
+        Modifier.fillMaxSize()
+            .background(GradientStart)
+            .statusBarsPadding()
+            .background(Color.White)
+    ) {
+        TransactionsScreen(
+            state = state,
+            onAction = viewModel::onAction
+        )
+    }
+
+
 }
 
 @Composable
@@ -112,7 +126,7 @@ private fun TransactionsScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         // Search + Filter header
         Surface(tonalElevation = 2.dp) {
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().background(GradientEnd).padding(16.dp)) {
                 //CustomTopBar(title = "Transactions")
                 Spacer(Modifier.height(12.dp))
 
@@ -125,8 +139,16 @@ private fun TransactionsScreen(
                                 selectedFilter = filter
                                 onAction(TransactionsAction.OnRefresh(filter))
                             },
-                            label = { Text(TransactionType.fromValue(filter)?.name ?: "ALL") },
-                            shape = RoundedCornerShape(8.dp)
+                            label = {
+                                Text(
+                                    TransactionType.fromValue(filter)?.name ?: "ALL",
+                                    color = Color.White
+                                )
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = lightGreen.copy(alpha = 0.5f)
+                            )
                         )
                     }
                 }

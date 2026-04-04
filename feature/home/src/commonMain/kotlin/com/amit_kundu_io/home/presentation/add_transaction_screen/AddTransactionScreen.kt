@@ -16,6 +16,7 @@
 package com.amit_kundu_io.home.presentation.add_transaction_screen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -54,7 +56,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.chip.CategoryChip.CategoryChip
 import com.amit_kundu_io.theme.ui.GradientEnd
@@ -64,8 +65,6 @@ import com.amit_kundu_io.theme.ui.Success
 import com.amit_kundu_io.utilities.Data_Models.Category
 import com.amit_kundu_io.utilities.Data_Models.PaymentMethod
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
-import com.amit_kundu_io.utilities.global_utility.GlobalUtility
-import com.amit_kundu_io.utilities.global_utility.PlatformGlobulUtility
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -118,7 +117,13 @@ private fun AddTransactionScreen(
 
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .background(GradientStart)
+            .statusBarsPadding()
+            .background(Color.White)
+    ) {
+
         GradientHeader(gradientColors = gradientColors) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onBack) {

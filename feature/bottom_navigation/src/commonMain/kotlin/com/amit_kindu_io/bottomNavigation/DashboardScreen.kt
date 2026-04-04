@@ -115,7 +115,7 @@ fun DashboardScreen() {
     ) { padding ->
         Box(
             modifier = Modifier.then(
-                if (isShowBottomNav) Modifier.padding(padding)
+                if (isShowBottomNav) Modifier.padding(bottom = padding.calculateBottomPadding())
                 else Modifier
             )
         ) {

@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amit_kundu_io.analytics.presentation.analytics_screen.MonthlyScreen.components.monthItems
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
+import com.amit_kundu_io.theme.ui.GradientEnd
 import com.amit_kundu_io.theme.ui.GradientPurple
 import com.amit_kundu_io.theme.ui.GradientPurpleEnd
+import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -60,7 +62,7 @@ private fun MonthlyScreen(
     state: MonthlyState,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        GradientHeader(gradientColors = listOf(GradientPurple, GradientPurpleEnd)) {
+        GradientHeader(gradientColors = listOf(GradientStart, GradientEnd)) {
             Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                 Column {
                     Text(
