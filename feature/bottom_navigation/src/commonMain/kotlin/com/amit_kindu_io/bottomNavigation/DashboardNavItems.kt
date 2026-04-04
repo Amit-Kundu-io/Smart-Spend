@@ -1,5 +1,6 @@
 package com.amit_kindu_io.bottomNavigation
 
+import com.amit_kundu_io.analytics.presentation.navigation.AnalyticsRoutes
 import com.amit_kundu_io.home.presentation.navigation.HomeRoutes
 import com.amit_kundu_io.transactions.presentation.navigation.TransactionsRoutes
 import common.resources.Res
@@ -27,7 +28,7 @@ sealed class BottomNavItem(
         selectedIcon = Res.drawable.ic_more,
     )
     data object Analytics : BottomNavItem(
-        route = HomeRoutes.HomeGraph::class.qualifiedName,
+        route = AnalyticsRoutes.AnalyticsGraph::class.qualifiedName,
         label = "Analytics",
         selectedIcon = Res.drawable.ic_home,
     )

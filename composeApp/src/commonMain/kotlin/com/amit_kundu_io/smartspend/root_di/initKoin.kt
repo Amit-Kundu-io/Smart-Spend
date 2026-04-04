@@ -1,5 +1,6 @@
 package com.amit_kundu_io.smartspend.root_di
 
+import com.amit_kundu_io.analytics.di.analyticsModule
 import com.amit_kundu_io.database.data.database.di.getDatabaseModule
 import com.amit_kundu_io.home.di.homeDi
 import com.amit_kundu_io.transactions.di.transactionsModules
@@ -15,6 +16,7 @@ fun initKoin(
             homeDi(),
             getDatabaseModule(),
             transactionsModules(),
+            analyticsModule(),
         )
     }
 }
