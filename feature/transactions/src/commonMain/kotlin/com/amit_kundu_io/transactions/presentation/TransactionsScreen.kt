@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,13 @@ fun TransactionsRootScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    DisposableEffect(Unit) {
+        onDispose {
+            // Cleanup logic here
+            viewModel.clear() // or call a custom cleanup method
+        }
+    }
+
     TransactionsScreen(
         state = state,
         onAction = viewModel::onAction
@@ -81,6 +89,11 @@ private fun TransactionsScreen(
     val filters = listOf(99, TransactionType.INCOME.value, TransactionType.EXPENSE.value)
 
     val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit){
+        onAction(TransactionsAction.OnNextPage)
+
+    }
 
     LaunchedEffect(state.uiItems) {
         snapshotFlow {

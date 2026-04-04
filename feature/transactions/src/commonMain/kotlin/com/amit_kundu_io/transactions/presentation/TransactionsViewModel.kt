@@ -108,10 +108,10 @@ class TransactionsViewModel(
         )
     }
 
-    init {
-        Logger.d("PAGINATION", "ViewModel init → first load")
-        loadNextItems()
-    }
+//    init {
+//        Logger.d("PAGINATION", "ViewModel init → first load")
+//        loadNextItems()
+//    }
 
     fun loadNextItems(fullLoading: Boolean = false) {
 
@@ -242,5 +242,14 @@ class TransactionsViewModel(
         }
 
         return result
+    }
+
+    fun clear() {
+        paginator.reset()
+        currentPage = 0
+
+        _state.value = TransactionsState()
+        Logger.e("PAGINATION", "VM clear")
+
     }
 }
