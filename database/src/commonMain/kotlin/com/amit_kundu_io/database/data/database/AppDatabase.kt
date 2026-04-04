@@ -20,6 +20,7 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import com.amit_kundu_io.database.data.database.dao.AnalyticsDao
 import com.amit_kundu_io.database.data.database.dao.BudgetDao
 import com.amit_kundu_io.database.data.database.dao.TransactionDao
 import com.amit_kundu_io.database.data.database.entity.BudgetEntity
@@ -39,6 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun transactionDao(): TransactionDao
     abstract fun budgetDao(): BudgetDao
+    abstract fun analyticsDao(): AnalyticsDao
 }
 // The Room compiler generates the `actual` implementations.
 @Suppress("KotlinNoActualForExpect")

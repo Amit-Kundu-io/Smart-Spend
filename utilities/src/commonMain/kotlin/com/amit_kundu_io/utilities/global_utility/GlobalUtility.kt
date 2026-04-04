@@ -179,4 +179,37 @@ object GlobalUtility {
         return "$monthName ${current.year}"
     }
 
+
+    fun getCurrentWeekStartEpoch(): Long {
+        val zone = TimeZone.currentSystemDefault()
+
+        val today = Clock.System.now()
+            .toLocalDateTime(zone)
+            .date
+
+        val daysFromMonday = today.dayOfWeek.ordinal // Monday = 0
+
+        val startOfWeek = today.minus(daysFromMonday, DateTimeUnit.DAY)
+
+        return startOfWeek
+            .atStartOfDayIn(zone)
+            .toEpochMilliseconds() / 1000
+    }
+
+    fun getCurrentWeekEndEpoch(): Long {
+        val zone = TimeZone.currentSystemDefault()
+
+        val start = Instant
+            .fromEpochMilliseconds(getCurrentWeekStartEpoch() * 1000)
+            .toLocalDateTime(zone)
+            .date
+
+        val endOfWeek = start.plus(6, DateTimeUnit.DAY)
+
+        return endOfWeek
+            .atTime(23, 59, 59)
+            .toInstant(zone)
+            .toEpochMilliseconds() / 1000
+    }
+
 }

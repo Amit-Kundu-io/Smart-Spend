@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.amit_kundu_io.theme.CategorySpending
 import com.amit_kundu_io.theme.components.Bar.CategorySpendingBar.CategorySpendingBar
 import com.amit_kundu_io.theme.components.Bar.SpendWiseBarChart.BarData
 import com.amit_kundu_io.theme.components.Bar.SpendWiseBarChart.SpendWiseBarChart
@@ -52,7 +53,9 @@ import com.amit_kundu_io.theme.components.cards.StatCardsGrid
 import com.amit_kundu_io.theme.sampleCategories
 import com.amit_kundu_io.theme.ui.GradientPurple
 import com.amit_kundu_io.theme.ui.GradientPurpleEnd
+import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
+import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -75,10 +78,17 @@ private fun AnalyticsScreen(
 
     var selectedPeriod by remember { mutableStateOf("Week") }
     val periods = listOf("Week", "Month", "3M", "Year")
+    val barData = state.dailyUi.map {
+        BarData(
+            label = it.day,
+            value = it.amount.toFloat(),
+            isHighlighted = false
+        )
+    }
 
-    val barData = listOf(
-        BarData("Mon", 450f), BarData("Tue", 680f), BarData("Wed", 750f, true),
-        BarData("Thu", 380f), BarData("Fri", 580f), BarData("Sat", 440f), BarData("Sun", 280f)
+    SpendWiseBarChart(
+        bars = barData,
+        modifier = Modifier.fillMaxWidth()
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -126,7 +136,7 @@ private fun AnalyticsScreen(
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White.copy(alpha = 0.75f)
                     ); Spacer(Modifier.height(2.dp)); Text(
-                    "₹5,840",
+                    "₹${GlobalUtility.formatCurrency(state.totalSpent)}",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -138,7 +148,7 @@ private fun AnalyticsScreen(
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White.copy(alpha = 0.75f)
                     ); Spacer(Modifier.height(2.dp)); Text(
-                    "₹834",
+                    "₹${GlobalUtility.formatCurrency(state.avgPerDay)}",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -150,7 +160,7 @@ private fun AnalyticsScreen(
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White.copy(alpha = 0.75f)
                     ); Spacer(Modifier.height(2.dp)); Text(
-                    "-12%",
+                    "${state.percentageChange.toInt()}",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color(0xFFA5F3A0),
                     fontWeight = FontWeight.Bold
@@ -186,7 +196,13 @@ private fun AnalyticsScreen(
                             fontWeight = FontWeight.SemiBold
                         )
                         Spacer(Modifier.height(12.dp))
-                        sampleCategories.forEach { CategorySpendingBar(it) }
+                        state.categoryUi.forEach { CategorySpendingBar(CategorySpending(
+                            name = it.name,
+                            emoji = it.emoji,
+                            amount = it.amount,
+                            percentage = it.percent,
+                            color = GradientStart
+                        )) }
                     }
                 }
             }

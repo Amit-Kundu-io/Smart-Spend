@@ -1,11 +1,14 @@
 package com.amit_kundu_io.database.data.database.di
 
+import com.amit_kundu_io.database.data.RepoImpl.AnalyticsRepositoryImpl
 import com.amit_kundu_io.database.data.RepoImpl.BudgetRepositoryImpl
 import com.amit_kundu_io.database.data.RepoImpl.TransactionRepositoryImpl
 import com.amit_kundu_io.database.data.database.AppDatabase
 import com.amit_kundu_io.database.data.database.DatabaseFactory
+import com.amit_kundu_io.database.data.database.dao.AnalyticsDao
 import com.amit_kundu_io.database.data.database.dao.BudgetDao
 import com.amit_kundu_io.database.data.database.dao.TransactionDao
+import com.amit_kundu_io.database.domain.Repo.AnalyticsRepository
 import com.amit_kundu_io.database.domain.Repo.BudgetRepository
 import com.amit_kundu_io.database.domain.Repo.TransactionRepository
 import org.koin.dsl.module
@@ -33,11 +36,18 @@ fun getDatabaseModule() = module {
         get<AppDatabase>().budgetDao()
     }
 
+    single<AnalyticsDao> {
+        get<AppDatabase>().analyticsDao()
+    }
+
     single<TransactionRepository> {
         TransactionRepositoryImpl(get())
     }
 
     single<BudgetRepository> {
         BudgetRepositoryImpl(get())
+    }
+    single<AnalyticsRepository> {
+        AnalyticsRepositoryImpl(get())
     }
 }

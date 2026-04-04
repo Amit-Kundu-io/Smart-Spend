@@ -42,15 +42,16 @@ import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 @Composable
 fun CategorySpendingBar(category: CategorySpending, modifier: Modifier = Modifier) {
     val animatedWidth by animateFloatAsState(
-        targetValue = category.percentage,
+        targetValue = category.percentage / 100f,
         animationSpec = tween(800),
         label = "catbar"
     )
+
     Column(modifier = modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text("${category.emoji} ${category.name}", style = MaterialTheme.typography.bodySmall)
             Text(
-                "₹${GlobalUtility.formatCurrency(category.amount)} · ${(category.percentage * 100).toInt()}%",
+                "₹${GlobalUtility.formatCurrency(category.amount)} · ${(category.percentage).toInt()}%",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 color = ExpenseRed
