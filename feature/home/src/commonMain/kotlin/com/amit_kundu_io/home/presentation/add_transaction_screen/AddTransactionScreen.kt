@@ -39,6 +39,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
@@ -61,6 +62,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -138,7 +140,8 @@ private fun AddTransactionScreen(
             .background(Color.White)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().background(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().background(
                 brush = Brush.linearGradient(
                     colors = gradientColors,
                     start = Offset(0f, 0f),
@@ -228,7 +231,7 @@ private fun AddTransactionScreen(
             item {
                 Column {
                     Text(
-                        "Transaction Title",
+                        "Transaction Title*",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -239,14 +242,23 @@ private fun AddTransactionScreen(
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("e.g. Grocery Shopping") },
                         shape = RoundedCornerShape(12.dp),
-                        singleLine = true
+                        singleLine = true,
+                                isError = state.titleError.isNotEmpty()
                     )
+                    if (state.titleError.isNotEmpty()) {
+                        Text(
+                            state.titleError, style = MaterialTheme.typography.titleSmall.copy(
+                                fontSize = 10.sp,
+                                color = Color.Red
+                            )
+                        )
+                    }
                 }
             }
             item {
                 Column {
                     Text(
-                        "Amount",
+                        "Amount*",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -256,9 +268,22 @@ private fun AddTransactionScreen(
                         onValueChange = { onAction(AddTransactionAction.OnAmountChange(it.filter { c -> c.isDigit() || c == '.' })) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("0.00") },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.NumberPassword
+                        ),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
-                        prefix = { Text("₹") })
+                        prefix = { Text("₹") },
+                        isError = state.amountError.isNotEmpty()
+                    )
+                    if (state.amountError.isNotEmpty()) {
+                        Text(
+                            state.amountError, style = MaterialTheme.typography.titleSmall.copy(
+                                fontSize = 10.sp,
+                                color = Color.Red
+                            )
+                        )
+                    }
 
 
                 }

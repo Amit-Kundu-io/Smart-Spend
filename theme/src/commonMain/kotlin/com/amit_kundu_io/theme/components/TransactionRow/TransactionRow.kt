@@ -86,7 +86,7 @@ fun TransactionRow(
                 fontWeight = FontWeight.Medium
             )
             Text(
-                "${transaction.category.label} · ${transaction.date} ${transaction.time}",
+                "${transaction.category.label} · ${transaction.date}",
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontSize = 13.sp,
                     lineHeight = 17.sp,

@@ -67,7 +67,7 @@ class AddTransactionViewModel(
             }
 
             is AddTransactionAction.OnAmountChange -> {
-                _state.update { it.copy(amount = action.value) }
+                _state.update { it.copy(amount = action.value, amountError = "") }
             }
 
             is AddTransactionAction.OnCategoryChange -> {
@@ -83,6 +83,22 @@ class AddTransactionViewModel(
             }
 
             AddTransactionAction.OnSave -> {
+
+                val current = state.value
+
+                val titleError = if (current.title.isBlank()) "Enter Title" else ""
+                val amountError = if (current.amount.isBlank()) "Input Amount" else ""
+
+                _state.update {
+                    it.copy(
+                        titleError = titleError,
+                        amountError = amountError
+                    )
+                }
+
+            // Stop only if ANY error exists
+                if (titleError.isNotEmpty() || amountError.isNotEmpty()) return
+
                 val currentState = _state.value
                 if (state.value.id == null) {
                     val transaction = TransactionEntity(
@@ -115,7 +131,7 @@ class AddTransactionViewModel(
             }
 
             is AddTransactionAction.OnTitleChange -> {
-                _state.update { it.copy(title = action.value) }
+                _state.update { it.copy(title = action.value, titleError = "") }
             }
 
             is AddTransactionAction.OnTypeChange -> {
