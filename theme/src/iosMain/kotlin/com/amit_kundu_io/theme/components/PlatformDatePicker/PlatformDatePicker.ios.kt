@@ -29,7 +29,7 @@ actual fun PlatformDatePicker(
 
     UIAlertAction.actionWithTitle("OK", UIAlertActionStyleDefault) {
         val seconds = datePicker.date.timeIntervalSince1970
-        onDateSelected((seconds * 1000).toLong())
+        onDateSelected((seconds * 1000).toLong()/1000)
         onDismiss()
     }.also { alert.addAction(it) }
 
