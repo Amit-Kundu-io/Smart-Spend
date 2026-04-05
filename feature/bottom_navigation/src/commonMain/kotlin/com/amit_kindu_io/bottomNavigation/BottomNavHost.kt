@@ -12,14 +12,18 @@ import com.amit_kundu_io.transactions.presentation.navigation.transactionsNaviga
 @Composable
 fun BottomNavHost(
     navController: NavHostController,
-    ) {
+) {
 
     NavHost(
         navController = navController,
         startDestination = HomeRoutes.HomeGraph,
     ) {
         homeNavigation(navController)
-        transactionsNavigation(navController)
+        transactionsNavigation(
+            navController,
+            navigateTODetailsScreen = {
+                navController.navigate(HomeRoutes.TransactionDetailRoute(it))
+            })
         analyticsNavigation(navController)
     }
 }

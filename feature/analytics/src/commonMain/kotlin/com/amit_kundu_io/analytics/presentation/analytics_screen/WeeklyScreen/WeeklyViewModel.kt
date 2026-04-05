@@ -36,10 +36,15 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
+import kotlin.time.Clock
 import kotlin.time.Instant
 
 class WeeklyViewModel(
@@ -123,6 +128,9 @@ class WeeklyViewModel(
     fun getCurrentWeekData() {
         viewModelScope.launch {
             val (startEpoch, endEpoch) = GlobalUtility.currentWeekRange()
+
+            Logger.d("TAdsdsdsdGGAG", "startDate: ${startEpoch} endDate ${endEpoch}")
+
             val data =
                 repo.getCurrentMonthTransactions(startEpoch, endEpoch).firstOrNull() ?: emptyList()
             val uidata = mapWeekTransactionsToDailyUi(data)
@@ -140,47 +148,76 @@ class WeeklyViewModel(
     }
 
 
-    fun mapWeekTransactionsToDailyUi(transactions: List<TransactionEntity>): List<BarData> {
+    fun mapWeekTransactionsToDailyUi(
+        transactions: List<TransactionEntity>
+    ): List<BarData> {
+        Logger.d("TAdsdsdsdGGAG", "Data: ${transactions}")
 
-        if (transactions.isNullOrEmpty()) return emptyList()
+        if (transactions.isEmpty()) return emptyList()
 
         val tz = TimeZone.currentSystemDefault()
+        val today = Clock.System.now().toLocalDateTime(tz).date
 
-        // Group transactions by day of week
-        val grouped = transactions.groupBy {
-            Instant.fromEpochSeconds(it.date)
-                .toLocalDateTime(tz)
-                .date.dayOfWeek
+        // Sunday start fix
+        val startOfWeek = today.minus((today.dayOfWeek.ordinal + 1) % 7, DateTimeUnit.DAY)
+        val endOfWeek = startOfWeek.plus(6, DateTimeUnit.DAY)
+
+        val weekTransactions = transactions.filter {
+            val txnDate = Instant.fromEpochSeconds(it.date)
+                .toLocalDateTime(tz).date
+            txnDate in startOfWeek..endOfWeek
         }
 
-        // Ensure all 7 days are present (Sunday → Saturday)
+        val grouped = weekTransactions.groupBy {
+            Instant.fromEpochSeconds(it.date)
+                .toLocalDateTime(tz).date.dayOfWeek
+        }
+
         val daysOfWeek = listOf(
             DayOfWeek.SUNDAY, DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
-            DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY,
-            DayOfWeek.SATURDAY
+            DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+            DayOfWeek.FRIDAY, DayOfWeek.SATURDAY
         )
 
-        // Collect raw totals
         val rawTotals = daysOfWeek.map { dow ->
             grouped[dow]?.sumOf { it.amount } ?: 0.0
         }
 
-        // Find max for normalization
-        val maxTotal = rawTotals.maxOrNull() ?: 1.0
+        val maxTotal = rawTotals.maxOrNull()?.takeIf { it > 0 } ?: 1.0
 
-        // Map into BarData with normalized values
         return daysOfWeek.mapIndexed { index, dow ->
-            val normalized = (rawTotals[index] / maxTotal).toFloat()
-            Logger.d("TAGGAG", "VM mapWeekTransactionsToDailyUi: $normalized")
+
+            val normalized = if (rawTotals[index] == 0.0) {
+                0f
+            } else {
+                (rawTotals[index] / maxTotal).toFloat().coerceIn(0.1f, 1f)
+            }
+
+            val isToday = dow == today.dayOfWeek
+
             BarData(
-                label = dow.name.lowercase().replaceFirstChar { it.uppercase() }
-                    .take(3), // "Sun", "Mon", etc.
-                value = normalized
+                label = dow.name.take(3).lowercase()
+                    .replaceFirstChar { it.uppercase() },
+                value = normalized,
+                isHighlighted = isToday
             )
         }
     }
 
+    fun generateWeeklyDummyData(): List<TransactionEntity> {
+        val tz = TimeZone.currentSystemDefault()
+        val now = Clock.System.now()
 
+        return listOf(
+            TransactionEntity("1", "Food", 200.0, 100, 1, 1, null, now.minus(0, DateTimeUnit.DAY, tz).epochSeconds),
+            TransactionEntity("2", "Recharge", 150.0, 100, 1, 1, null, now.minus(1, DateTimeUnit.DAY, tz).epochSeconds),
+            TransactionEntity("3", "Bills", 500.0, 101, 1, 1, null, now.minus(2, DateTimeUnit.DAY, tz).epochSeconds),
+            TransactionEntity("4", "Shopping", 800.0, 100, 1, 1, null, now.minus(3, DateTimeUnit.DAY, tz).epochSeconds),
+            TransactionEntity("5", "Travel", 300.0, 100, 1, 1, null, now.minus(4, DateTimeUnit.DAY, tz).epochSeconds),
+            TransactionEntity("6", "Snacks", 100.0, 100, 1, 1, null, now.minus(5, DateTimeUnit.DAY, tz).epochSeconds),
+            TransactionEntity("7", "Groceries", 600.0, 100, 1, 1, null, now.minus(6, DateTimeUnit.DAY, tz).epochSeconds),
+        )
+    }
     fun mapCategoryToUi(
         list: List<CategoryExpense>,
         total: Double

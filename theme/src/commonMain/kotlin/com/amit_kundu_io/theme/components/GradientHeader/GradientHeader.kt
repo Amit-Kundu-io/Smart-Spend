@@ -43,7 +43,7 @@ fun GradientHeader(
                 start = Offset(0f, 0f),
                 end   = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
             ))
-            .padding(horizontal = 16.dp, vertical = 20.dp)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
         Column(content = content)
     }

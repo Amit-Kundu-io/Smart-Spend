@@ -87,7 +87,7 @@ class MonthlyViewModel(
             //  Group by day (epoch seconds → LocalDate)
             val tz = TimeZone.currentSystemDefault()
             val groupedByDay = transactions.groupBy {
-                Instant.fromEpochSeconds(it.date).toLocalDateTime(tz).date.dayOfMonth
+                Instant.fromEpochSeconds(it.date).toLocalDateTime(tz).date.day
             }
 
             //  Compute totals per day

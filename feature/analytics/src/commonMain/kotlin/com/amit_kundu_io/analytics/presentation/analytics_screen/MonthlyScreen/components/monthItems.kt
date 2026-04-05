@@ -48,10 +48,11 @@ import com.amit_kundu_io.analytics.presentation.analytics_screen.components.Spen
 import com.amit_kundu_io.analytics.presentation.analytics_screen.components.StatsGrid
 import com.amit_kundu_io.analytics.presentation.analytics_screen.components.formatAmount
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
+import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 
 fun LazyListScope.monthItems(state: MonthlyState) {
     item {
-        AnalyticsCard(title = "April 2026 — Daily Spend") {
+        AnalyticsCard(title = "${GlobalUtility.getCurrentMonthYear()} — Daily Spend") {
             SpendingHeatmap(days = state.heatmapDays)
         }
     }

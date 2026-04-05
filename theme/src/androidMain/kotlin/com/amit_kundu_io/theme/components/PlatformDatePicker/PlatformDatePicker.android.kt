@@ -17,10 +17,11 @@ actual fun PlatformDatePicker(
         context,
         { _, year, month, dayOfMonth ->
             val cal = Calendar.getInstance().apply {
-                set(year, month, dayOfMonth, 0, 0, 0)
+                set(year, month, dayOfMonth, 12, 0, 0) // ✅ MIDDAY (IMPORTANT)
                 set(Calendar.MILLISECOND, 0)
             }
-            val epochSeconds = cal.timeInMillis / 1000 // 10 digits
+
+            val epochSeconds = cal.timeInMillis / 1000
             onDateSelected(epochSeconds)
         },
         calendar.get(Calendar.YEAR),

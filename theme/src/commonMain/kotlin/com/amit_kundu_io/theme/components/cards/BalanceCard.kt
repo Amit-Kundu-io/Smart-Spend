@@ -50,7 +50,7 @@ fun BalanceCard(
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                "Total Balance",
+                "Total Saving",
                 style = MaterialTheme.typography.labelMedium,
                 color = Color.White.copy(alpha = 0.8f)
             )
@@ -81,18 +81,18 @@ fun BalanceCard(
                     Color(0xFFFFCDD2),
                     Modifier.weight(1f)
                 )
-                VerticalDivider(
-                    color = Color.White.copy(alpha = 0.2f),
-                    modifier = Modifier
-                        .height(36.dp)
-                        .padding(horizontal = 12.dp)
-                )
-                BalanceStatItem(
-                    "🔥 STREAK",
-                    "$streak Days",
-                    Color(0xFFFFD54F),
-                    modifier = Modifier.weight(1f)
-                )
+//                VerticalDivider(
+//                    color = Color.White.copy(alpha = 0.2f),
+//                    modifier = Modifier
+//                        .height(36.dp)
+//                        .padding(horizontal = 12.dp)
+//                )
+//                BalanceStatItem(
+//                    "🔥 STREAK",
+//                    "$streak Days",
+//                    Color(0xFFFFD54F),
+//                    modifier = Modifier.weight(1f)
+//                )
             }
         }
     }

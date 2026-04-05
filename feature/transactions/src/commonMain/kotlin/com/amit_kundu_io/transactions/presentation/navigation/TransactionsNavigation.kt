@@ -21,11 +21,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.amit_kundu_io.transactions.presentation.TransactionsRootScreen
 
-fun NavGraphBuilder.transactionsNavigation(navController: NavHostController) {
+fun NavGraphBuilder.transactionsNavigation(
+    navController: NavHostController,
+    navigateTODetailsScreen: (id: String) -> Unit,
+) {
     navigation<TransactionsRoutes.TransactionsGraph>(startDestination = TransactionsRoutes.TransactionsRoute) {
 
         composable<TransactionsRoutes.TransactionsRoute> {
-            TransactionsRootScreen()
+            TransactionsRootScreen(navigateTODetailsScreen = navigateTODetailsScreen)
         }
     }
 }

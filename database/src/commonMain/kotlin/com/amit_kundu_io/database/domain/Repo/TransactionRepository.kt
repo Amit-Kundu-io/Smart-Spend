@@ -49,4 +49,6 @@ interface TransactionRepository {
         query: String? = null
     ): List<TransactionEntity>
 
+    fun getTotalSaving(): Flow<Double>
+
 }

@@ -20,16 +20,27 @@ import kotlinx.datetime.*
 
 object GlobalUtility {
 
+    fun getCurrentMonthYear(): String {
+        val tz = TimeZone.currentSystemDefault()
+        val today = Clock.System.now().toLocalDateTime(tz)
+
+        val monthName = today.month.name
+            .lowercase()
+            .replaceFirstChar { it.uppercase() }
+
+        return "$monthName ${today.year}"
+    }
 
     fun formatCurrency(amount: Double): String {
         val rounded = kotlin.math.round(amount).toLong()
-        val str = rounded.toString()
+        val isNegative = rounded < 0
+        val absStr = kotlin.math.abs(rounded).toString()
 
-        return when {
-            str.length <= 3 -> str
+        val formatted = when {
+            absStr.length <= 3 -> absStr
             else -> {
-                val last3 = str.takeLast(3)
-                val rest = str.dropLast(3)
+                val last3 = absStr.takeLast(3)
+                val rest = absStr.dropLast(3)
                     .reversed()
                     .chunked(2)
                     .joinToString(",")
@@ -37,7 +48,10 @@ object GlobalUtility {
                 "$rest,$last3"
             }
         }
+
+        return if (isNegative) "-$formatted" else formatted
     }
+
 
     fun currentEpochSeconds(): Long {
         return Clock.System.now().epochSeconds
@@ -246,22 +260,25 @@ object GlobalUtility {
 
     fun currentWeekRange(): Pair<Long, Long> {
         val tz = TimeZone.currentSystemDefault()
-        val now = Clock.System.now().toLocalDateTime(tz)
+        val today = Clock.System.now().toLocalDateTime(tz).date
 
-        // Day of week index (Monday = 1 … Sunday = 7)
-        val dayOfWeek = now.date.dayOfWeek.isoDayNumber
+        // Convert to Sunday-based index
+        val dayIndex = (today.dayOfWeek.ordinal + 1) % 7
 
-        // Start of week = subtract (dayOfWeek - 1) days
-        val startDate = now.date.minus(dayOfWeek - 1, DateTimeUnit.DAY)
-        val startMillis = startDate.atStartOfDayIn(tz).toEpochMilliseconds() / 1000
+        // Sunday start
+        val startOfWeek = today.minus(dayIndex, DateTimeUnit.DAY)
+        val startEpoch = startOfWeek
+            .atStartOfDayIn(tz)
+            .epochSeconds
 
-        // End of week = add (7 - dayOfWeek) days
-        val endDate = now.date.plus(7 - dayOfWeek, DateTimeUnit.DAY)
-        val endMillis = endDate.atTime(LocalTime(23, 59, 59))
-            .toInstant(tz)
-            .toEpochMilliseconds() / 1000
+        // Saturday end
+        val endOfWeek = startOfWeek.plus(6, DateTimeUnit.DAY)
+        val endEpoch = endOfWeek
+            .plus(1, DateTimeUnit.DAY)
+            .atStartOfDayIn(tz)
+            .epochSeconds - 1
 
-        return startMillis to endMillis
+        return startEpoch to endEpoch
     }
 
 }

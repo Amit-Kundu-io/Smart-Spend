@@ -74,7 +74,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TransactionsRootScreen(
-    viewModel: TransactionsViewModel = koinViewModel()
+    viewModel: TransactionsViewModel = koinViewModel(),
+    navigateTODetailsScreen: (id: String) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -96,7 +97,8 @@ fun TransactionsRootScreen(
     ) {
         TransactionsScreen(
             state = state,
-            onAction = viewModel::onAction, query = query
+            onAction = viewModel::onAction, query = query,
+            navigateTODetailsScreen = navigateTODetailsScreen
         )
     }
 
@@ -108,7 +110,9 @@ private fun TransactionsScreen(
     state: TransactionsState,
     onAction: (TransactionsAction) -> Unit,
     query: String,
-) {
+    navigateTODetailsScreen: (id: String) -> Unit,
+
+    ) {
 
 
     var searchQuery by remember { mutableStateOf("") }
@@ -117,7 +121,7 @@ private fun TransactionsScreen(
 
     val lazyListState = rememberLazyListState()
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         onAction(TransactionsAction.OnNextPage)
 
     }
@@ -129,7 +133,7 @@ private fun TransactionsScreen(
             .distinctUntilChanged()
             .collect { lastVisibleIndex ->
                 if (lastVisibleIndex == state.uiItems.lastIndex) {
-                    Logger.d("ADADADADDA","call $lastVisibleIndex")
+                    Logger.d("ADADADADDA", "call $lastVisibleIndex")
                     onAction(TransactionsAction.OnNextPage)
                 }
             }
@@ -168,13 +172,13 @@ private fun TransactionsScreen(
                             cursorColor = MaterialTheme.colorScheme.primary
                         )
                     )
-                    Surface(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = CircleShape,
-                        modifier = Modifier.size(42.dp)
-                    ) {
-                        IconButton(onClick = {}) { Icon(Icons.Default.FilterList, null) }
-                    }
+//                    Surface(
+//                        color = MaterialTheme.colorScheme.surfaceVariant,
+//                        shape = CircleShape,
+//                        modifier = Modifier.size(42.dp)
+//                    ) {
+//                        IconButton(onClick = {}) { Icon(Icons.Default.FilterList, null) }
+//                    }
                 }
                 Spacer(Modifier.height(10.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -206,7 +210,7 @@ private fun TransactionsScreen(
             contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 50.dp)
         ) {
 
-            if (state.uiItems.isEmpty()){
+            if (state.uiItems.isEmpty()) {
                 item {
                     Column(
                         modifier = Modifier.fillMaxWidth()
@@ -246,7 +250,9 @@ private fun TransactionsScreen(
                     }
 
                     is TransactionUiItem.Item -> {
-                        TransactionRow(transaction = item.data.toUi())
+                        TransactionRow(transaction = item.data.toUi(), onClick = {
+                            navigateTODetailsScreen(it)
+                        })
                         Spacer(Modifier.height(7.dp))
                     }
                 }
@@ -275,6 +281,7 @@ private fun Preview() {
             state = TransactionsState(),
             onAction = {},
             query = "",
+            navigateTODetailsScreen = {_-> },
         )
     }
 }

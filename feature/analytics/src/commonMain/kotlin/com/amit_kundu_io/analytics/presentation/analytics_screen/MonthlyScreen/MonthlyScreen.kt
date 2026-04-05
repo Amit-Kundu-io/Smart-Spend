@@ -88,18 +88,18 @@ private fun MonthlyScreen(
                     fontWeight = FontWeight.Bold
                 )
                 }
-                Column {
-                    Text(
-                        "VS LAST",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.75f)
-                    ); Spacer(Modifier.height(2.dp)); Text(
-                    "${state.percentageChange.toInt()}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color(0xFFA5F3A0),
-                    fontWeight = FontWeight.Bold
-                )
-                }
+//                Column {
+//                    Text(
+//                        "VS LAST",
+//                        style = MaterialTheme.typography.labelSmall,
+//                        color = Color.White.copy(alpha = 0.75f)
+//                    ); Spacer(Modifier.height(2.dp)); Text(
+//                    "${state.percentageChange.toInt()}",
+//                    style = MaterialTheme.typography.headlineMedium,
+//                    color = Color(0xFFA5F3A0),
+//                    fontWeight = FontWeight.Bold
+//                )
+//                }
             }
         }
 

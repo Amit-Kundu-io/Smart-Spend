@@ -78,27 +78,26 @@ fun SpendWiseBarChart(bars: List<BarData>, modifier: Modifier = Modifier) {
 
 @Composable
 fun SpendingHeatmap(days: List<Float>, modifier: Modifier = Modifier) {
-    val dayLabels = listOf("S", "M", "T", "W", "T", "F", "S")
     val lowColor = Color(0xFFEBE7EF)
     val highColor = Color(0xFF4527A0)
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            dayLabels.forEach { d ->
-                Text(
-                    d,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.width(32.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 13.sp
-                )
+    val maxValue = days.maxOrNull() ?: 1f
+    val normalizedDays = days.map { value ->
+        when {
+            value <= 0f -> 0f
+            else -> {
+                val scaled = value / maxValue
+                // enforce minimum floor of 0.1
+                scaled.coerceAtLeast(0.1f)
             }
         }
+    }
+
+    Column(modifier = modifier.fillMaxWidth()) {
         Spacer(Modifier.height(4.dp))
 
         val offset = 1
-        val total = offset + days.size
+        val total = offset + normalizedDays.size
         val rows = (total + 6) / 7
 
         for (row in 0 until rows) {
@@ -106,7 +105,7 @@ fun SpendingHeatmap(days: List<Float>, modifier: Modifier = Modifier) {
                 for (col in 0 until 7) {
                     val cellIdx = row * 7 + col
                     val dayIdx = cellIdx - offset
-                    val fraction = if (dayIdx < 0 || dayIdx >= days.size) null else days[dayIdx]
+                    val fraction = if (dayIdx < 0 || dayIdx >= normalizedDays.size) null else normalizedDays[dayIdx]
 
                     Box(
                         modifier = Modifier
@@ -115,11 +114,7 @@ fun SpendingHeatmap(days: List<Float>, modifier: Modifier = Modifier) {
                             .clip(RoundedCornerShape(4.dp))
                             .background(
                                 if (fraction == null) Color.Transparent
-                                else androidx.compose.ui.graphics.lerp(
-                                    lowColor,
-                                    highColor,
-                                    fraction
-                                )
+                                else androidx.compose.ui.graphics.lerp(lowColor, highColor, fraction)
                             ),
                         contentAlignment = Alignment.Center
                     ) {
@@ -143,20 +138,15 @@ fun SpendingHeatmap(days: List<Float>, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text(
-                "Low",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text("Low", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Box(
-                modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(3.dp))
+                modifier = Modifier
+                    .weight(1f)
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp))
                     .background(Brush.horizontalGradient(listOf(lowColor, highColor)))
             )
-            Text(
-                "High",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text("High", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

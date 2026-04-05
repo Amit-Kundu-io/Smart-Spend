@@ -8,6 +8,7 @@ import common.resources.ic_home
 import common.resources.ic_more
 import common.resources.ic_plus
 import common.resources.ic_settings
+import common.resources.outline_analytics_24
 import org.jetbrains.compose.resources.DrawableResource
 
 sealed class BottomNavItem<T : Any>(
@@ -31,7 +32,7 @@ sealed class BottomNavItem<T : Any>(
     data object Analytics : BottomNavItem<AnalyticsRoutes.AnalyticsGraph>(
         route = AnalyticsRoutes.AnalyticsGraph,
         label = "Analytics",
-        selectedIcon = Res.drawable.ic_home,
+        selectedIcon = Res.drawable.outline_analytics_24,
     )
 
     data object Settings : BottomNavItem<HomeRoutes.HomeGraph>(
@@ -46,7 +47,7 @@ val bottomNavItems = listOf(
     BottomNavItem.Home,
     BottomNavItem.Transactions,
     BottomNavItem.Analytics,
-    BottomNavItem.Settings,
+    //BottomNavItem.Settings,
     )
 
 

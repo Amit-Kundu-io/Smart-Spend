@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,6 +64,7 @@ import com.amit_kundu_io.theme.components.cards.BudgetProgressCard
 import com.amit_kundu_io.theme.ui.GradientStart
 import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import com.amit_kundu_io.theme.ui.lightGreen
+import kotlinx.datetime.Month
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -89,12 +91,12 @@ fun HomeRootScreen(
             onDismiss = { showSheet = false }
         )
     }
-    Column (
+    Column(
         Modifier.fillMaxSize()
             .background(GradientStart)
             .statusBarsPadding()
             .background(Color.White)
-    ){
+    ) {
         Box(modifier = Modifier.fillMaxSize()) {
 
             HomeScreen(
@@ -158,9 +160,18 @@ private fun HomeScreen(
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
+
         // Gradient header
         GradientHeader {
-            Spacer(Modifier.height(20.dp))
+            Text(
+                "Review your expenses daily", style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.White,
+                    fontSize = 19.sp,
+
+                )
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
             BalanceCard(
                 balance = state.balance,
                 income = state.totalIncome,
@@ -172,7 +183,12 @@ private fun HomeScreen(
         // Scrollable content
         LazyColumn(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 150.dp),
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 150.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             item {
@@ -240,7 +256,6 @@ private fun HomeScreen(
                     TransactionRow(transaction = transaction.toUi()) {
                         navigateTODetailsScreen(it)
                     }
-                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 }
             }
         }
@@ -255,6 +270,6 @@ private fun Preview() {
             state = HomeState(), onAction = {},
             navigateTODetailsScreen = {},
             navigateToAddTransaction = {}
-            )
+        )
     }
 }

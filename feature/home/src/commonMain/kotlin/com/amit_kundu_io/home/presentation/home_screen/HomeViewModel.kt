@@ -66,7 +66,7 @@ class HomeViewModel(
     private fun observeFinancialData() {
         combine(
             repo.getTotalIncome(),
-            repo.getTotalExpense()
+            repo.getTotalExpense(),
         ) { income, expense ->
 
             Triple(income, expense, income - expense)

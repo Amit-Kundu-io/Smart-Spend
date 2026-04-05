@@ -20,6 +20,7 @@ import com.amit_kundu_io.database.data.database.entity.TransactionEntity
 import com.amit_kundu_io.database.domain.Repo.TransactionRepository
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 class TransactionRepositoryImpl(
     private val dao: TransactionDao
@@ -104,6 +105,15 @@ class TransactionRepositoryImpl(
             limit = pageSize,
             offset = offset
         )
+    }
+
+    override fun getTotalSaving(): Flow<Double> {
+        return combine(
+            dao.getTotalByType(TransactionType.INCOME.value),
+            dao.getTotalByType(TransactionType.EXPENSE.value)
+        ) { income, expense ->
+            income - expense
+        }
     }
 
 

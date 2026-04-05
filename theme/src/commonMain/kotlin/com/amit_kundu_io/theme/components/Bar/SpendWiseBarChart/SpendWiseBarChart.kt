@@ -44,14 +44,12 @@ fun SpendWiseBarChart(bars: List<BarData>, modifier: Modifier = Modifier) {
 
     val maxVal = bars.maxOfOrNull { it.value }?.takeIf { it > 0f } ?: 1f
 
-
     Row(
         modifier = modifier.height(100.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.Bottom
     ) {
         bars.forEach { bar ->
-
             val normalizedTarget = (bar.value / maxVal).coerceIn(0f, 1f)
 
             val animatedH by animateFloatAsState(
@@ -65,8 +63,8 @@ fun SpendWiseBarChart(bars: List<BarData>, modifier: Modifier = Modifier) {
                 else -> animatedH.coerceIn(0f, 1f)
             }
 
-            val safeTopWeight = (1f - safeAnimatedH).coerceAtLeast(0.001f)
-            val safeBarWeight = safeAnimatedH.coerceAtLeast(0.001f)
+            val safeTopWeight = (1f - safeAnimatedH).coerceAtLeast(0.01f)
+            val safeBarWeight = safeAnimatedH.coerceAtLeast(0.01f)
 
             Column(
                 modifier = Modifier.weight(1f),
