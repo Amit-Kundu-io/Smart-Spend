@@ -74,8 +74,8 @@ private fun AnalyticsScreen(
     val periods = listOf(
         AnalyticsPeriodTab.WEEK,
         AnalyticsPeriodTab.MONTH,
-        AnalyticsPeriodTab.THREE_MONTHS,
-        AnalyticsPeriodTab.YEAR
+       // AnalyticsPeriodTab.THREE_MONTHS,
+       // AnalyticsPeriodTab.YEAR
     )
 
 
@@ -115,7 +115,7 @@ private fun AnalyticsScreen(
                     ) {
                         Text(
                             period.label,
-                            fontSize = 12.sp,
+                            fontSize = 15.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )
                     }

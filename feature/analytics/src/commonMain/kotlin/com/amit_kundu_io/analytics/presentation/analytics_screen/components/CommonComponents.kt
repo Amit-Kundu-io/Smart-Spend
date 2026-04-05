@@ -28,33 +28,55 @@ import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 @Composable
 fun CategoryBreakdownCard(categories: List<CategoryData>) {
     AnalyticsCard(title = "Category Breakdown") {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            categories.forEach { cat ->
-                val animP by animateFloatAsState(
-                    targetValue = cat.percentage,
-                    animationSpec = tween(700),
-                    label = "cat_${cat.name}"
+        if (categories.isEmpty()){
+            Row(
+                modifier = Modifier.height(100.dp).fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "No Data Added",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 16.sp
+                    )
                 )
-                Column {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("${cat.emoji} ${cat.name}", style = MaterialTheme.typography.bodySmall)
-                        Text(
-                            "₹${formatAmount(cat.amount)} · ${(cat.percentage * 100).toInt()}%",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                    Spacer(Modifier.height(5.dp))
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height(7.dp)
-                            .clip(RoundedCornerShape(7.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                    ) {
+            }
+        }
+        else {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                categories.forEach { cat ->
+                    val animP by animateFloatAsState(
+                        targetValue = cat.percentage,
+                        animationSpec = tween(700),
+                        label = "cat_${cat.name}"
+                    )
+                    Column {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "${cat.emoji} ${cat.name}",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                            Text(
+                                "₹${formatAmount(cat.amount)} · ${(cat.percentage * 100).toInt()}%",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                        Spacer(Modifier.height(5.dp))
                         Box(
-                            modifier = Modifier.fillMaxWidth(animP).fillMaxHeight()
-                                .clip(RoundedCornerShape(7.dp)).background(cat.color)
-                        )
+                            modifier = Modifier.fillMaxWidth().height(7.dp)
+                                .clip(RoundedCornerShape(7.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(animP).fillMaxHeight()
+                                    .clip(RoundedCornerShape(7.dp)).background(cat.color)
+                            )
+                        }
                     }
                 }
             }

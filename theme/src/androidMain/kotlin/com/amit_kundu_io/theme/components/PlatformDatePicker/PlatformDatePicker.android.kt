@@ -20,7 +20,8 @@ actual fun PlatformDatePicker(
                 set(year, month, dayOfMonth, 0, 0, 0)
                 set(Calendar.MILLISECOND, 0)
             }
-            onDateSelected(cal.timeInMillis)
+            val epochSeconds = cal.timeInMillis / 1000 // 10 digits
+            onDateSelected(epochSeconds)
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),

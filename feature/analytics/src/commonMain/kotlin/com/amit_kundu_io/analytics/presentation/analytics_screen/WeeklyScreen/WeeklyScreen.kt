@@ -32,11 +32,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amit_kundu_io.theme.CategorySpending
 import com.amit_kundu_io.theme.components.Bar.CategorySpendingBar.CategorySpendingBar
@@ -100,24 +102,13 @@ private fun WeeklyScreen(
                     fontWeight = FontWeight.Bold
                 )
                 }
-                Column {
-                    Text(
-                        "VS LAST",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.75f)
-                    ); Spacer(Modifier.height(2.dp)); Text(
-                    "${state.percentageChange.toInt()}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color(0xFFA5F3A0),
-                    fontWeight = FontWeight.Bold
-                )
-                }
+
             }
         }
 
         LazyColumn(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 150.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             item {
@@ -129,8 +120,23 @@ private fun WeeklyScreen(
                             fontWeight = FontWeight.SemiBold
                         )
                         Spacer(Modifier.height(12.dp))
+                        if (state.weeklyData.isNullOrEmpty()){
+                            Row(
+                                modifier = Modifier.height(100.dp).fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    "No Data Added",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontSize = 16.sp
+                                    )
+                                )
+                            }
+                        }
+                        else{
                         SpendWiseBarChart(bars = state.weeklyData, modifier = Modifier.fillMaxWidth())
-                    }
+                    }}
                 }
             }
             item {
@@ -142,21 +148,38 @@ private fun WeeklyScreen(
                             fontWeight = FontWeight.SemiBold
                         )
                         Spacer(Modifier.height(12.dp))
-                        state.categoryUi.forEach {
-                            CategorySpendingBar(
-                                CategorySpending(
-                                    name = it.name,
-                                    emoji = it.emoji,
-                                    amount = it.amount,
-                                    percentage = it.percent,
-                                    color = GradientStart
+
+                        if (state.categoryUi.isEmpty()){
+                            Row(
+                                modifier = Modifier.height(100.dp).fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    "No Data Added",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontSize = 16.sp
+                                    )
                                 )
-                            )
+                            }
+                        }
+                        else {
+                            state.categoryUi.forEach {
+                                CategorySpendingBar(
+                                    CategorySpending(
+                                        name = it.name,
+                                        emoji = it.emoji,
+                                        amount = it.amount,
+                                        percentage = it.percent,
+                                        color = GradientStart
+                                    )
+                                )
+                            }
                         }
                     }
                 }
             }
-            item { StatCardsGrid() }
+            //item { StatCardsGrid() }
         }
     }
 }

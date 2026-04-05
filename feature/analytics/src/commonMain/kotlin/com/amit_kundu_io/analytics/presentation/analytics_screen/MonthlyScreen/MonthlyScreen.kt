@@ -31,14 +31,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amit_kundu_io.analytics.presentation.analytics_screen.MonthlyScreen.components.monthItems
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.ui.GradientEnd
-import com.amit_kundu_io.theme.ui.GradientPurple
-import com.amit_kundu_io.theme.ui.GradientPurpleEnd
 import com.amit_kundu_io.theme.ui.GradientStart
+import com.amit_kundu_io.theme.ui.SmartSpendTheme
 import com.amit_kundu_io.utilities.global_utility.GlobalUtility
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -105,10 +105,17 @@ private fun MonthlyScreen(
 
         LazyColumn(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 150.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             monthItems(state)
         }
+    }
+}
+@Preview
+@Composable
+private fun Preview() {
+    SmartSpendTheme {
+        MonthlyRootScreen()
     }
 }

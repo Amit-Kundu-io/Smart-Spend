@@ -24,13 +24,19 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -51,6 +57,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,6 +75,7 @@ import com.amit_kundu_io.theme.ui.Success
 import com.amit_kundu_io.utilities.Data_Models.Category
 import com.amit_kundu_io.utilities.Data_Models.PaymentMethod
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
+import kotlinx.datetime.Month
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -118,6 +127,9 @@ private fun AddTransactionScreen(
         TransactionType.INCOME -> listOf(Success, Color(0xFF4CAF50))
 
     }
+    val listState = rememberLazyListState()
+
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -125,24 +137,32 @@ private fun AddTransactionScreen(
             .statusBarsPadding()
             .background(Color.White)
     ) {
-
-        GradientHeader(gradientColors = gradientColors) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Surface(color = Color.White.copy(alpha = 0.2f), shape = CircleShape) {
-                        Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
-                        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().background(
+                brush = Brush.linearGradient(
+                    colors = gradientColors,
+                    start = Offset(0f, 0f),
+                    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+                )
+            )
+        ) {
+            IconButton(onClick = onBack) {
+                Surface(color = Color.White.copy(alpha = 0.2f), shape = CircleShape) {
+                    Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
                     }
                 }
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    "${if (state.isEditMode) "Edit" else "Add"} Transaction",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
             }
+            Spacer(Modifier.width(8.dp))
+            Text(
+                "${if (state.isEditMode) "Edit" else "Add"} Transaction",
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        GradientHeader(gradientColors = gradientColors) {
+
             Spacer(Modifier.height(16.dp))
             // Type selector
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -197,7 +217,11 @@ private fun AddTransactionScreen(
         }
 
         LazyColumn(
-            modifier = Modifier.weight(1f),
+            state = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                //.imePadding()
+                .navigationBarsPadding(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
@@ -235,7 +259,6 @@ private fun AddTransactionScreen(
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
                         prefix = { Text("₹") })
-
 
 
                 }
@@ -336,7 +359,7 @@ private fun AddTransactionScreen(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
     SmartSpendTheme {

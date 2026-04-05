@@ -141,6 +141,9 @@ class WeeklyViewModel(
 
 
     fun mapWeekTransactionsToDailyUi(transactions: List<TransactionEntity>): List<BarData> {
+
+        if (transactions.isNullOrEmpty()) return emptyList()
+
         val tz = TimeZone.currentSystemDefault()
 
         // Group transactions by day of week

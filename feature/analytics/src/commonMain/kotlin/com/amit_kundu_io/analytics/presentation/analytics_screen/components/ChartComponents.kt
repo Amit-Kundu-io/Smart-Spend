@@ -91,7 +91,7 @@ fun SpendingHeatmap(days: List<Float>, modifier: Modifier = Modifier) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.width(32.dp),
                     textAlign = TextAlign.Center,
-                    fontSize = 9.sp
+                    fontSize = 13.sp
                 )
             }
         }
@@ -128,7 +128,7 @@ fun SpendingHeatmap(days: List<Float>, modifier: Modifier = Modifier) {
                                 text = (dayIdx + 1).toString(),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = if (fraction > 0.6f) Color.White else Color(0xFF4527A0),
-                                fontSize = 8.sp
+                                fontSize = 13.sp
                             )
                         }
                     }
