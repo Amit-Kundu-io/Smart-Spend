@@ -50,6 +50,7 @@ import androidx.navigation.compose.rememberNavController
 import com.amit_kundu_io.analytics.presentation.navigation.AnalyticsRoutes
 import com.amit_kundu_io.home.presentation.navigation.HomeRoutes
 import com.amit_kundu_io.transactions.presentation.navigation.TransactionsRoutes
+import com.amit_kundu_io.utilities.Logger.Logger
 import org.jetbrains.compose.resources.painterResource
 
 
@@ -135,6 +136,8 @@ fun AppBottomNav(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val route = currentDestination?.route
+
+    Logger.d("Current_Route",route.toString())
 
     var isShowBottomNav by remember { mutableStateOf(true) }
 
