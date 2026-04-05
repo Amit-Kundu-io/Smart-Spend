@@ -53,7 +53,7 @@ View and manage all transactions.
 * 📃 Full transaction history
 * 🔍 Search functionality
 * 🎯 Filter by type
-* 📅 Date-based filtering
+
 
 ---
 
