@@ -30,6 +30,8 @@ sealed interface AddTransactionAction {
     data class OnCategoryChange(val value: Int) : AddTransactionAction
     data class OnPaymentChange(val value: Int) : AddTransactionAction
 
+    data class OnCurrentDateChange(val value: Long) : AddTransactionAction
+
     data object OnSave : AddTransactionAction
 
 }

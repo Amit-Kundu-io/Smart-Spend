@@ -34,6 +34,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
@@ -56,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.amit_kundu_io.home.presentation.add_transaction_screen.components.DatePickerField
 import com.amit_kundu_io.theme.components.GradientHeader.GradientHeader
 import com.amit_kundu_io.theme.components.chip.CategoryChip.CategoryChip
 import com.amit_kundu_io.theme.ui.GradientEnd
@@ -129,7 +131,7 @@ private fun AddTransactionScreen(
                 IconButton(onClick = onBack) {
                     Surface(color = Color.White.copy(alpha = 0.2f), shape = CircleShape) {
                         Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
-                            Icon(Icons.Default.ArrowBack, null, tint = Color.White)
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
                         }
                     }
                 }
@@ -233,7 +235,20 @@ private fun AddTransactionScreen(
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
                         prefix = { Text("₹") })
+
+
+
                 }
+            }
+
+            item {
+                DatePickerField(
+                    label = "Select Date",
+                    date = state.date,
+                    onDateSelected = {
+                        onAction(AddTransactionAction.OnCurrentDateChange(it))
+                    }
+                )
             }
             if (state.type.value == TransactionType.EXPENSE.value) {
                 item {

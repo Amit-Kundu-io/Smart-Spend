@@ -17,6 +17,7 @@ package com.amit_kundu_io.home.presentation.add_transaction_screen
 
 import androidx.compose.runtime.Immutable
 import com.amit_kundu_io.utilities.Data_Models.TransactionType
+import kotlin.time.Clock
 
 @Immutable
 data class AddTransactionState(
@@ -28,6 +29,7 @@ data class AddTransactionState(
     val type: TransactionType = TransactionType.EXPENSE,
     val amount: String = "",
     val title: String = "",
+    val date: Long = Clock.System.now().toEpochMilliseconds() / 1000,
     val note: String = "",
     val category: Int = 100,
     val paymentMethod: Int = 100,

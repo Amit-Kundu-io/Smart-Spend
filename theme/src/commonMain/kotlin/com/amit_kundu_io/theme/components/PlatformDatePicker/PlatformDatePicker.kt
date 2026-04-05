@@ -15,5 +15,10 @@
 
 package com.amit_kundu_io.theme.components.PlatformDatePicker
 
-class PlatformDatePicker {
-}
+import androidx.compose.runtime.Composable
+
+@Composable
+expect fun PlatformDatePicker(
+    onDismiss: () -> Unit,
+    onDateSelected: (Long) -> Unit
+)

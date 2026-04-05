@@ -49,7 +49,7 @@ class AddTransactionViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 /** Load initial data here **/
-               // seedIfEmpty()
+                // seedIfEmpty()
                 hasLoadedInitialData = true
             }
         }
@@ -93,7 +93,7 @@ class AddTransactionViewModel(
                         category = currentState.category,
                         paymentMethod = currentState.paymentMethod,
                         note = currentState.note.ifBlank { null },
-                        date = Clock.System.now().toEpochMilliseconds() / 1000
+                        date = currentState.date ?: Clock.System.now().toEpochMilliseconds() / 1000
                     )
                     saveTransaction(transaction)
 
@@ -121,16 +121,23 @@ class AddTransactionViewModel(
             is AddTransactionAction.OnTypeChange -> {
                 _state.update { it.copy(type = action.type) }
             }
+
+            is AddTransactionAction.OnCurrentDateChange -> {
+                _state.update {
+                    it.copy(
+                        date = action.value
+                    )
+                }
+            }
         }
     }
 
     fun saveTransaction(transection: TransactionEntity) {
         viewModelScope.launch {
             try {
-                 repo.insert(transection)
-                _state.update {  it.copy(isAddSuccessfully = true) }
-            }
-            catch (e : Exception){
+                repo.insert(transection)
+                _state.update { it.copy(isAddSuccessfully = true) }
+            } catch (e: Exception) {
 
             }
         }
@@ -140,7 +147,7 @@ class AddTransactionViewModel(
         viewModelScope.launch {
             try {
                 repo.update(transection)
-                _state.update {  it.copy(isAddSuccessfully = true) }
+                _state.update { it.copy(isAddSuccessfully = true) }
             } catch (e: Exception) {
 
             }
@@ -169,7 +176,7 @@ class AddTransactionViewModel(
 
 
     suspend fun seedIfEmpty() {
-        Logger.d("ScreaptRun","Run1")
+        Logger.d("ScreaptRun", "Run1")
 
         val now = Clock.System.now()
 
@@ -183,7 +190,7 @@ class AddTransactionViewModel(
             }
 
             val epochSeconds = getPastEpochSeconds(daysAgo) // ✅ 10 digit
-            Logger.d("ScreaptRun","indx $index")
+            Logger.d("ScreaptRun", "indx $index")
             TransactionEntity(
                 id = "txn_seed_$index", // 🔥 stable unique id
                 title = generateTitle(index),
@@ -195,7 +202,7 @@ class AddTransactionViewModel(
                 date = epochSeconds
             )
         }
-        Logger.d("ScreaptRun","Run2")
+        Logger.d("ScreaptRun", "Run2")
 
         dao.insertAll(transactions)
     }
@@ -231,6 +238,7 @@ class AddTransactionViewModel(
     private fun generatePayment(): Int {
         return listOf(100, 101, 102).random()
     }
+
     fun getPastEpochSeconds(daysAgo: Int): Long {
         val zone = TimeZone.currentSystemDefault()
 

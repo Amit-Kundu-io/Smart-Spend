@@ -1,6 +1,6 @@
-package com.amit_kundu_io.home.presentation.add_transaction_screen
+package com.amit_kundu_io.theme.components.PlatformDatePicker
 
-import androidx.compose.material3.DatePickerDialog
+import android.app.DatePickerDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
@@ -13,7 +13,7 @@ actual fun PlatformDatePicker(
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
-    val value = DatePickerDialog(
+    DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
             val cal = Calendar.getInstance().apply {

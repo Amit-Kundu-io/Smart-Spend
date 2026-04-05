@@ -89,7 +89,7 @@ fun DashboardScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
-         //   .statusBarsPadding(),
+         //   .statusBarsPadding()
         //.navigationBarsPadding(),
         bottomBar = {
             AnimatedVisibility(

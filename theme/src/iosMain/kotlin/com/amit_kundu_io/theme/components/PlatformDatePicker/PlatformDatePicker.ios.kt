@@ -1,4 +1,14 @@
-package com.amit_kundu_io.home.presentation.add_transaction_screen
+package com.amit_kundu_io.theme.components.PlatformDatePicker
+
+import androidx.compose.runtime.Composable
+import platform.Foundation.timeIntervalSince1970
+import platform.UIKit.UIAlertAction
+import platform.UIKit.UIAlertActionStyleDefault
+import platform.UIKit.UIAlertController
+import platform.UIKit.UIAlertControllerStyleAlert
+import platform.UIKit.UIApplication
+import platform.UIKit.UIDatePicker
+import platform.UIKit.UIDatePickerMode
 
 @Composable
 actual fun PlatformDatePicker(
@@ -6,7 +16,7 @@ actual fun PlatformDatePicker(
     onDateSelected: (Long) -> Unit
 ) {
     val datePicker = UIDatePicker().apply {
-        datePickerMode = UIDatePickerModeDate
+        datePickerMode = UIDatePickerMode.UIDatePickerModeDate
     }
 
     val alert = UIAlertController.alertControllerWithTitle(
