@@ -10,36 +10,35 @@ import common.resources.ic_plus
 import common.resources.ic_settings
 import org.jetbrains.compose.resources.DrawableResource
 
-sealed class BottomNavItem(
-    val route: String?,
+sealed class BottomNavItem<T : Any>(
+    val route: T,
     val label: String,
     val selectedIcon: DrawableResource,
 ) {
 
-    data object Home : BottomNavItem(
-        route = HomeRoutes.HomeGraph::class.qualifiedName,
+    data object Home : BottomNavItem<HomeRoutes.HomeGraph>(
+        route = HomeRoutes.HomeGraph,
         label = "Home",
         selectedIcon = Res.drawable.ic_home,
     )
 
-    data object Transactions : BottomNavItem(
-        route = TransactionsRoutes.TransactionsGraph::class.qualifiedName,
+    data object Transactions : BottomNavItem<TransactionsRoutes.TransactionsGraph>(
+        route = TransactionsRoutes.TransactionsGraph,
         label = "Transactions",
         selectedIcon = Res.drawable.ic_more,
     )
-    data object Analytics : BottomNavItem(
-        route = AnalyticsRoutes.AnalyticsGraph::class.qualifiedName,
+
+    data object Analytics : BottomNavItem<AnalyticsRoutes.AnalyticsGraph>(
+        route = AnalyticsRoutes.AnalyticsGraph,
         label = "Analytics",
         selectedIcon = Res.drawable.ic_home,
     )
 
-    data object Settings : BottomNavItem(
-        route = HomeRoutes.HomeGraph::class.qualifiedName,
+    data object Settings : BottomNavItem<HomeRoutes.HomeGraph>(
+        route = HomeRoutes.HomeGraph,
         label = "Settings",
         selectedIcon = Res.drawable.ic_settings,
     )
-
-
 }
 
 

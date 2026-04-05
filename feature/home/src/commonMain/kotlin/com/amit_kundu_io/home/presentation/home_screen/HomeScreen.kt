@@ -122,7 +122,8 @@ fun HomeRootScreen(
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .padding(bottom = 100.dp),
                 containerColor = Color(0xFF0F5F5C)
             ) {
                 Icon(

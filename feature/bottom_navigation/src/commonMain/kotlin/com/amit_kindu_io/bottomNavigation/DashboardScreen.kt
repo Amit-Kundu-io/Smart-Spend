@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -58,29 +59,19 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun DashboardScreen() {
     val bottomNavController = rememberNavController()
-    val currentRoute = bottomNavController.currentBackStackEntryAsState().value?.destination?.route
+
+    val currentDestination = bottomNavController.currentBackStackEntry?.destination
 
     var isShowBottomNav by remember {
         mutableStateOf(true)
     }
 
-    LaunchedEffect(currentRoute) {
+    LaunchedEffect(currentDestination) {
 
-        isShowBottomNav = when (currentRoute) {
-            HomeRoutes.HomeRoute::class.qualifiedName -> {
-                true
-            }
-            TransactionsRoutes.TransactionsRoute::class.qualifiedName -> {
-                true
-            }
-
-            AnalyticsRoutes.AnalyticsRoute::class.qualifiedName -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        isShowBottomNav =
+            currentDestination?.hasRoute(HomeRoutes.HomeRoute::class) == true ||
+                    currentDestination?.hasRoute(TransactionsRoutes.TransactionsRoute::class) == true ||
+                    currentDestination?.hasRoute(AnalyticsRoutes.AnalyticsRoute::class) == true
     }
 
 
@@ -94,7 +85,7 @@ fun DashboardScreen() {
         //.navigationBarsPadding(),
         bottomBar = {
             AnimatedVisibility(
-                visible = isShowBottomNav,
+                visible = true,// isShowBottomNav,
                 enter = fadeIn() + slideInVertically(
                     initialOffsetY = {
                         it / 2
@@ -131,7 +122,7 @@ fun DashboardScreen() {
 @Composable
 fun AppBottomNav(
     navController: NavHostController,
-    items: List<BottomNavItem>,
+    items: List<BottomNavItem<*>>,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -141,13 +132,10 @@ fun AppBottomNav(
 
     var isShowBottomNav by remember { mutableStateOf(true) }
 
-    LaunchedEffect(route) {
-        isShowBottomNav = when {
-            route?.contains("attendance") == true -> false
-            route?.contains("punch") == true -> false
-            else -> true
-        }
-    }
+    isShowBottomNav =
+        currentDestination?.hasRoute(HomeRoutes.HomeRoute::class) == true ||
+                currentDestination?.hasRoute(TransactionsRoutes.TransactionsRoute::class) == true ||
+                currentDestination?.hasRoute(AnalyticsRoutes.AnalyticsRoute::class) == true
 
     AnimatedVisibility(
         visible = isShowBottomNav,
@@ -158,12 +146,10 @@ fun AppBottomNav(
             items = items,
             currentDestination = currentDestination,
             onValueChange = { item ->
-                navController.navigate(item.route ?: "") {
-                    popUpTo(HomeRoutes.HomeRoute::class.qualifiedName ?: "") {
+                navController.navigate(item.route) {
+                    popUpTo(HomeRoutes.HomeRoute) {
                         saveState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
             }
         )
@@ -173,9 +159,9 @@ fun AppBottomNav(
 
 @Composable
 fun CustomBottomBar(
-    items: List<BottomNavItem>,
+    items: List<BottomNavItem<*>>,
     currentDestination: NavDestination?,
-    onValueChange: (BottomNavItem) -> Unit,
+    onValueChange: (BottomNavItem<*>) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -207,7 +193,9 @@ fun CustomBottomBar(
             items.forEach { screen ->
 
                 val isSelected =
-                    currentDestination?.hierarchy?.any { it.route == screen.route } == true
+                    currentDestination?.hierarchy?.any {
+                        it.hasRoute(screen.route::class)
+                    } == true
 
                 Column(
                     modifier = Modifier
@@ -259,87 +247,6 @@ fun CustomBottomBar(
 }
 
 
-/*
-@Composable
-fun CustomBottomBar(
-    items: List<BottomNavItem>,
-    currentDestination: NavDestination?,
-    onValueChange: (BottomNavItem) -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp) // give space for floating button
-    ) {
-
-        //  Bottom Bar Background
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(top = 16.dp, bottom = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-
-            items.forEachIndexed { index, screen ->
-
-                // Skip center item (Add button)
-                if (index == 2) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    return@forEachIndexed
-                }
-
-                val isSelected =
-                    currentDestination?.hierarchy?.any { it.route == screen.route } == true
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { onValueChange(screen) },
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        painter = painterResource(screen.selectedIcon),
-                        contentDescription = screen.label,
-                        tint = if (isSelected) Color.Black else Color.Gray,
-                        modifier = Modifier.size(24.dp)
-                    )
-
-                    Text(
-                        text = screen.label,
-                        fontSize = 11.sp,
-                        color = if (isSelected) Color.Black else Color.Gray
-                    )
-                }
-            }
-        }
-
-        // CENTER FLOATING BUTTON
-        FloatingActionButton(
-            onClick = {
-                val addItem = items[2]
-                onValueChange(addItem)
-            },
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(y = (-20).dp),
-            containerColor = Color(0xFF0F5F5C),
-            shape = CircleShape,
-            elevation = FloatingActionButtonDefaults.elevation(8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add",
-                tint = Color.White
-            )
-        }
-    }
-}
-
-
- */
 
 
 
