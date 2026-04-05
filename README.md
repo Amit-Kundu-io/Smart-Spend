@@ -105,7 +105,7 @@ This project demonstrates:
 * ✅ Clean architecture & modular design
 * ✅ Efficient state management
 * ✅ Optimized database queries
-* ✅ Modern UI/UX
+
 
 ---
 
